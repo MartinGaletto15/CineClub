@@ -22,7 +22,7 @@ public class Movie
     public Genre Genre { get; set; } // Propiedad de Navegación
 
     [Required]
-    public DateTime ReleaseDate { get; set; }
+    public DateOnly ReleaseDate { get; set; }
 
     [Required]
     public decimal Duration { get; set; }
