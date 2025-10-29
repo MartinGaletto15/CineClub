@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models.Requests;
+namespace Application.Models.Requests;
 
-public record CreateMovieRequest(
+public record UpdateMovieRequest(
+    [Required]
+    int Id,
 
     [Required]
     string Title,
@@ -21,4 +23,3 @@ public record CreateMovieRequest(
 
     string? Poster = null
 );
-

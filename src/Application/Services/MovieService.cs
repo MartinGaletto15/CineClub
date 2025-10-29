@@ -1,9 +1,10 @@
-using Core.Dtos;
-using Core.Entities;
-using Core.Exceptions;
-using Core.Interfaces;
+using Application.Dtos;
+using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Exceptions;
+using Application.Models;
 
-namespace Core.Services;
+namespace Application.Services;
 
 public class MovieService
 {

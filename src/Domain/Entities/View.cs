@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Entities;
+namespace Domain.Entities;
 public class View
 {
     [Required]

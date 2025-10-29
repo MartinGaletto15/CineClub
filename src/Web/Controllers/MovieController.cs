@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Core.Services;
-using Web.Models.Requests;
-using Core.Dtos;
+using Application.Services;
+using Application.Models.Requests;
+using Application.Dtos;
 
 namespace Web.Controllers;
 

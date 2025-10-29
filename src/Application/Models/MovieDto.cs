@@ -1,6 +1,6 @@
-using Core.Entities;
+using Domain.Entities;
 
-namespace Core.Dtos;
+namespace Application.Dtos;
 
 public record MovieDto(int id, string title, Director director, Genre genre, DateOnly releaseDate, decimal duration, string synopsis, string poster)
 {

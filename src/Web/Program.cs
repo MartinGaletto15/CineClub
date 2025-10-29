@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Data;
-using Core.Interfaces;
-using Core.Services;
+using Domain.Interfaces;
+using Application.Services;
 using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
