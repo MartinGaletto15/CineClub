@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.Data.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -65,7 +65,7 @@ namespace Infrastructure.Data.Migrations
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     DirectorId = table.Column<int>(type: "INTEGER", nullable: false),
                     GenreId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Duration = table.Column<decimal>(type: "TEXT", nullable: false),
                     Synopsis = table.Column<string>(type: "TEXT", nullable: false),
                     Poster = table.Column<string>(type: "TEXT", nullable: false)
@@ -95,8 +95,8 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     MovieId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Rating = table.Column<decimal>(type: "TEXT", nullable: false),
-                    ViewDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Rating = table.Column<float>(type: "REAL", nullable: false),
+                    DateFinish = table.Column<DateTime>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {

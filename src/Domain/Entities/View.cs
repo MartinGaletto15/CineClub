@@ -1,21 +1,24 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities;
-public class View
+namespace Domain.Entities
 {
-    [Required]
-    public int Id { get; set; }
+    public class View
+    {
+        [Key]
+        public int Id { get; set; }
 
-    // Clave Foránea para User
-    [Required]
-    public int UserId { get; set; } // FK (tipo int y termina en "Id")
-    public User User { get; set; } // Propiedad de Navegación
+        [Required]
+        public int UserId { get; set; }
+        public User? User { get; set; }   // Navegación (nullable, correcto)
 
-    // Clave Foránea para Movie
-    [Required]
-    public int MovieId { get; set; } // FK (tipo int y termina en "Id")
-    public Movie Movie { get; set; } // Propiedad de Navegación
+        [Required]
+        public int MovieId { get; set; }
+        public Movie? Movie { get; set; } // Navegación (nullable, correcto)
 
-    public decimal Rating { get; set; }
-    public DateTime ViewDate { get; set; }
+        public float Rating { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime DateFinish { get; set; }
+    }
 }

@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data;
 using Domain.Interfaces;
 using Application.Services;
 using Web.Middleware;
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Repositories;
+using Application.Interfaces;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +16,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// INYECCION DE DEPENDENCIAS
+// INYECCIÓN DE DEPENDENCIAS
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<MovieService>();
+builder.Services.AddScoped<IViewRepository, ViewRepository>();
+builder.Services.AddScoped<IViewService, ViewService>();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // BASE DE DATOS SQLITE
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(
+builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlite(
     builder.Configuration["ConnectionStrings:DbConnectionString"]
 ));
 
