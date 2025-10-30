@@ -67,8 +67,8 @@ namespace Infrastructure.Migrations
                     GenreId = table.Column<int>(type: "INTEGER", nullable: false),
                     ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Duration = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Synopsis = table.Column<string>(type: "TEXT", nullable: false),
-                    Poster = table.Column<string>(type: "TEXT", nullable: false)
+                    Synopsis = table.Column<string>(type: "TEXT", nullable: true),
+                    Poster = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

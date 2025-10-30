@@ -65,14 +65,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Poster")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("ReleaseDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Synopsis")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
