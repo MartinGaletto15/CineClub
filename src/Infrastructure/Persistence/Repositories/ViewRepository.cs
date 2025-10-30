@@ -6,7 +6,7 @@ namespace Infrastructure.Persistence.Repositories
 {
     public class ViewRepository : GenericRepository<View>, IViewRepository
     {
-        private readonly CineClubContext _cineClubContext; // 👈 Renombrado
+        private readonly CineClubContext _cineClubContext;
 
         public ViewRepository(CineClubContext context) : base(context)
         {

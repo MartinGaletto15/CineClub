@@ -1,7 +1,9 @@
-using Application.DTOs;
+using Application.Models;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
+using Application.Models.Requests;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -16,32 +18,19 @@ namespace Application.Services
 
         public async Task<IEnumerable<ViewDto>> GetAllAsync()
         {
-            var views = await _viewRepository.GetAllAsync();
-            return views.Select(v => new ViewDto
-            {
-                Id = v.Id,
-                UserId = v.UserId,
-                MovieId = v.MovieId,
-                Rating = v.Rating,
-                DateFinish = v.DateFinish
-            });
+            var views = await _viewRepository.GetAllAsync()
+                    ?? throw new AppValidationException("No se encontraron peliculas");
+            return ViewDto.Create(views);
         }
 
         public async Task<ViewDto> GetByIdAsync(int id)
         {
-            var v = await _viewRepository.GetByIdAsync(id);
-            if (v == null) throw new Exception("View not found");
-            return new ViewDto
-            {
-                Id = v.Id,
-                UserId = v.UserId,
-                MovieId = v.MovieId,
-                Rating = v.Rating,
-                DateFinish = v.DateFinish
-            };
+            var view = await _viewRepository.GetByIdAsync(id)
+                ?? throw new AppValidationException("Pelicula no encontrada");
+            return ViewDto.Create(view);
         }
 
-        public async Task<ViewDto> CreateAsync(ViewDto dto)
+        public async Task<ViewDto> CreateAsync(CreateViewRequest dto)
         {
             var view = new View
             {
@@ -51,19 +40,19 @@ namespace Application.Services
                 DateFinish = dto.DateFinish
             };
             await _viewRepository.AddAsync(view);
-            return dto;
+            return ViewDto.Create(view);
         }
 
-        public async Task<ViewDto> UpdateAsync(ViewDto dto)
+        public async Task<ViewDto> UpdateAsync(UpdateViewRequest dto)
         {
-            var view = await _viewRepository.GetByIdAsync(dto.Id);
-            if (view == null) throw new Exception("View not found");
+            var view = await _viewRepository.GetByIdAsync(dto.Id)
+                    ?? throw new AppValidationException("Pelicula no encontrada");
 
             view.Rating = dto.Rating;
             view.DateFinish = dto.DateFinish;
 
             await _viewRepository.UpdateAsync(view);
-            return dto;
+            return ViewDto.Create(view);
         }
 
         public async Task DeleteAsync(int id)

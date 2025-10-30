@@ -12,5 +12,3 @@ namespace Domain.Interfaces
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     }
 } 
-
-// Esto soluciona y da las operaciones CRUD comunes que usan todos los repositorios Repositorio Generico para EF core.

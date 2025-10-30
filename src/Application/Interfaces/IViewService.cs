@@ -1,4 +1,5 @@
-using Application.DTOs;
+using Application.Models;
+using Application.Models.Requests;
 
 namespace Application.Interfaces
 {
@@ -6,8 +7,8 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<ViewDto>> GetAllAsync();
         Task<ViewDto> GetByIdAsync(int id);
-        Task<ViewDto> CreateAsync(ViewDto dto);
-        Task<ViewDto> UpdateAsync(ViewDto dto);
+        Task<ViewDto> CreateAsync(CreateViewRequest createRequest);
+        Task<ViewDto> UpdateAsync(UpdateViewRequest updateRequest);
         Task DeleteAsync(int id);
     }
 }

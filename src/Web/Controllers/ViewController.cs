@@ -1,6 +1,7 @@
-using Application.DTOs;
+using Application.Models;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Application.Models.Requests;
 
 namespace WebAPI.Controllers
 {
@@ -30,14 +31,14 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ViewDto dto)
+        public async Task<IActionResult> Create(CreateViewRequest dto)
         {
             var result = await _viewService.CreateAsync(dto);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ViewDto dto)
+        public async Task<IActionResult> Update(int id, UpdateViewRequest dto)
         {
             dto.Id = id;
             var result = await _viewService.UpdateAsync(dto);
