@@ -21,6 +21,10 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IViewRepository, ViewRepository>();
 builder.Services.AddScoped<IViewService, ViewService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // BASE DE DATOS SQLITE
