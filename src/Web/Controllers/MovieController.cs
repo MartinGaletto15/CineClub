@@ -18,15 +18,8 @@ namespace Web.Controllers
         [HttpGet("api/movies/{id}")]
         public async Task<ActionResult<MovieDto>> GetMovieById([FromRoute] int id)
         {
-            try
-            {
-                var movie = await _movieService.GetMovieByIdAsync(id);
-                return Ok(movie);
-            }
-            catch (Domain.Exceptions.AppValidationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var movie = await _movieService.GetMovieByIdAsync(id);
+            return Ok(movie);
         }
 
         [HttpGet("api/movies")]
@@ -47,32 +40,15 @@ namespace Web.Controllers
         [HttpPut("api/movies/{id}")]
         public async Task<ActionResult<MovieDto>> UpdateMovie([FromRoute] int id, [FromBody] UpdateMovieRequest updateMovieDto)
         {
-            try
-            {
-                var movie = await _movieService.UpdateMovieAsync(id, updateMovieDto);
-                return Ok(movie);
-            }
-            catch (Domain.Exceptions.AppValidationException ex)
-            {
-                if (ex.Message.Contains("coinciden"))
-                    return BadRequest(ex.Message);
-                
-                return NotFound(ex.Message);
-            }
+            var movie = await _movieService.UpdateMovieAsync(id, updateMovieDto);
+            return Ok(movie);
         }
 
         [HttpDelete("api/movies/{id}")]
         public async Task<ActionResult> DeleteMovie([FromRoute] int id)
         {
-            try
-            {
-                await _movieService.DeleteMovieAsync(id);
-                return NoContent();
-            }
-            catch (Domain.Exceptions.AppValidationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _movieService.DeleteMovieAsync(id);
+            return NoContent();
         }
     }
 }

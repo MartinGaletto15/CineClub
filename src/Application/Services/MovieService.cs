@@ -62,7 +62,6 @@ namespace Application.Services
             var movie = await _MovieRepository.GetByIdAsync(id)
                 ?? throw new AppValidationException("Pelicula no encontrada");
 
-            // Actualizar la entidad con los datos del request
             movie.Title = updateRequest.Title;
             movie.DirectorId = updateRequest.DirectorId;
             movie.GenreId = updateRequest.GenreId;
