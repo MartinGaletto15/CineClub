@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Application.Dtos;
 
-public record MovieDto(int id, string title, Director director, Genre genre, DateOnly releaseDate, decimal duration, string synopsis, string poster)
+public record MovieDto(int id, string title, Director director, Genre genre, DateOnly releaseDate, decimal duration, string? synopsis, string? poster)
 {
     public static MovieDto Create(Movie entity)
     {

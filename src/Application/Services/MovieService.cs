@@ -1,78 +1,84 @@
 using Application.Dtos;
+using Application.Interfaces;
+using Application.Models.Requests;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Exceptions;
-using Application.Models;
 
-namespace Application.Services;
-
-public class MovieService
+namespace Application.Services
 {
-    private readonly IMovieRepository _MovieRepository;
-
-    public MovieService(IMovieRepository movieRepository)
+    public class MovieService : IMovieService
     {
-        _MovieRepository = movieRepository;
-    }
+        private readonly IMovieRepository _MovieRepository;
 
-    public MovieDto GetMovieById(int id)
-    {
-        var movie = _MovieRepository.GetById(id)
-                ?? throw new AppValidationException("Pelicula no encontrada");
-        return MovieDto.Create(movie);
-    }
-
-    public List<MovieDto> GetAllMovies()
-    {
-        var movies = _MovieRepository.GetAll()
-                ?? throw new AppValidationException("No se encontraron peliculas");
-        return MovieDto.Create(movies);
-    }
-
-    public Movie CreateMovie(string title, int DirectorId, int GenreId, DateOnly? releaseDate, decimal? duration, string? synopsis, string? poster)
-    {
-        var movie = _MovieRepository.Add(new Movie
+        public MovieService(IMovieRepository movieRepository)
         {
-            Title = title,
-            DirectorId = DirectorId,
-            GenreId = GenreId,
-            ReleaseDate = releaseDate ?? DateOnly.FromDateTime(DateTime.Now),
-            Duration = duration ?? 0,
-            Synopsis = synopsis,
-            Poster = poster
-        });
-
-        return movie;
-    }
-
-    public MovieDto UpdateMovie(int id, int idDto, string title, int DirectorId, int GenreId, DateOnly? releaseDate, decimal? duration, string? synopsis, string? poster)
-    {
-        if (id != idDto)
-        {
-            throw new AppValidationException("Los IDs no coinciden");
+            _MovieRepository = movieRepository;
         }
 
-        var movie = _MovieRepository.GetById(id)
-            ?? throw new AppValidationException("Pelicula no encontrada");
+        public async Task<MovieDto> GetMovieByIdAsync(int id)
+        {
+            var movie = await _MovieRepository.GetByIdAsync(id)
+                    ?? throw new AppValidationException("Pelicula no encontrada");
+            
+            return MovieDto.Create(movie);
+        }
 
-        movie.Title = title;
-        movie.DirectorId = DirectorId;
-        movie.GenreId = GenreId;
-        movie.ReleaseDate = releaseDate ?? movie.ReleaseDate;
-        movie.Duration = duration ?? movie.Duration;
-        movie.Synopsis = synopsis ?? movie.Synopsis;
-        movie.Poster = poster ?? movie.Poster;
+        public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
+        {
+            var movies = await _MovieRepository.GetAllAsync();
+            if (movies == null || !movies.Any())
+            {
+                return new List<MovieDto>(); 
+            }
+            return MovieDto.Create(movies);
+        }
 
-        _MovieRepository.Update(movie);
+        public async Task<MovieDto> CreateMovieAsync(CreateMovieRequest createRequest)
+        {
+            var movie = new Movie
+            {
+                Title = createRequest.Title,
+                DirectorId = createRequest.DirectorId,
+                GenreId = createRequest.GenreId,
+                ReleaseDate = createRequest.ReleaseDate ?? DateOnly.FromDateTime(DateTime.Now),
+                Duration = createRequest.Duration ?? 0,
+                Synopsis = createRequest.Synopsis,
+                Poster = createRequest.Poster
+            };
 
-        return MovieDto.Create(movie);
-    }
+            await _MovieRepository.AddAsync(movie);
+            
+            return MovieDto.Create(movie);
+        }
 
-    public void DeleteMovie(int id)
-    {
-        var movie = _MovieRepository.GetById(id)
-            ?? throw new AppValidationException("Pelicula no encontrada");
+        public async Task<MovieDto> UpdateMovieAsync(int id, UpdateMovieRequest updateRequest)
+        {
+            if (id != updateRequest.Id)
+            {
+                throw new AppValidationException("Los IDs de la ruta y del cuerpo no coinciden");
+            }
 
-        _MovieRepository.Delete(movie.Id);
+            var movie = await _MovieRepository.GetByIdAsync(id)
+                ?? throw new AppValidationException("Pelicula no encontrada");
+
+            // Actualizar la entidad con los datos del request
+            movie.Title = updateRequest.Title;
+            movie.DirectorId = updateRequest.DirectorId;
+            movie.GenreId = updateRequest.GenreId;
+            movie.ReleaseDate = updateRequest.ReleaseDate ?? movie.ReleaseDate;
+            movie.Duration = updateRequest.Duration ?? movie.Duration;
+            movie.Synopsis = updateRequest.Synopsis ?? movie.Synopsis;
+            movie.Poster = updateRequest.Poster ?? movie.Poster;
+
+            await _MovieRepository.UpdateAsync(movie);
+
+            return MovieDto.Create(movie);
+        }
+
+        public async Task DeleteMovieAsync(int id)
+        {
+            await _MovieRepository.DeleteAsync(id);
+        }
     }
 }

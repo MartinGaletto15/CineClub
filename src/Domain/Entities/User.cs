@@ -9,23 +9,23 @@ public class User
 
     [Required]
     [MaxLength(100)]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
-    public string LastName { get; set; }
+    public string LastName { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
-    public string Avatar { get; set; }
+    public string Avatar { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [Required]
     public UserRole Role { get; set; }

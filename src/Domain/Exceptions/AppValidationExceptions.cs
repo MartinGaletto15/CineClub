@@ -2,7 +2,7 @@ namespace Domain.Exceptions;
 
 public class AppValidationException : Exception
 {
-    public string ErrorCode { get; private set; }
+    public string ErrorCode { get; set; } = string.Empty;
     public AppValidationException()
     : base()
     {

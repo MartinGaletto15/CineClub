@@ -1,4 +1,3 @@
-
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities;
@@ -9,17 +8,17 @@ public class Movie
 
     [Required]
     [MaxLength(200)]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     // Clave Foránea para Director
     [Required]
-    public int DirectorId { get; set; } // FK (tipo int y termina en "Id")
-    public Director Director { get; set; } // Propiedad de Navegación
+    public int DirectorId { get; set; } 
+    public Director Director { get; set; } = null!;
 
     // Clave Foránea para Genre
     [Required]
-    public int GenreId { get; set; } // FK (tipo int y termina en "Id")
-    public Genre Genre { get; set; } // Propiedad de Navegación
+    public int GenreId { get; set; } 
+    public Genre Genre { get; set; } = null!;
 
     [Required]
     public DateOnly ReleaseDate { get; set; }
@@ -27,7 +26,7 @@ public class Movie
     [Required]
     public decimal Duration { get; set; }
 
-    public string Synopsis { get; set; }
+    public string? Synopsis { get; set; }
 
-    public string Poster { get; set; }
+    public string? Poster { get; set; }
 }

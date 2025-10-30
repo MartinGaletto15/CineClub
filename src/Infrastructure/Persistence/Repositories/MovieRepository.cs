@@ -1,57 +1,32 @@
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Persistence; // 👈 importante
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class MovieRepository : IMovieRepository
+    public class MovieRepository : GenericRepository<Movie>, IMovieRepository
     {
-        private readonly CineClubContext _context;
-
-        public MovieRepository(CineClubContext context)
+        public MovieRepository(CineClubContext context) : base(context)
         {
-            _context = context;
+            // La clase base 'GenericRepository' se encarga de
+            // inicializar _context y _dbSet
         }
 
-        public Movie? GetById(int id)
+        public override async Task<IEnumerable<Movie>> GetAllAsync()
         {
-            return _context.Movies
+            return await _dbSet
                 .Include(m => m.Director)
                 .Include(m => m.Genre)
-                .FirstOrDefault(m => m.Id == id);
+                .ToListAsync();
         }
 
-        public List<Movie>? GetAll()
+        public override async Task<Movie?> GetByIdAsync(int id)
         {
-            return _context.Movies
+            return await _dbSet
                 .Include(m => m.Director)
                 .Include(m => m.Genre)
-                .ToList();
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public Movie Add(Movie movie)
-        {
-            _context.Movies.Add(movie);
-            _context.SaveChanges();
-            return movie;
-        }
-
-        public Movie Update(Movie movie)
-        {
-            _context.Movies.Update(movie);
-            _context.SaveChanges();
-            return movie;
-        }
-
-        public void Delete(int id)
-        {
-            var movie = _context.Movies.Find(id);
-            if (movie != null)
-            {
-                _context.Movies.Remove(movie);
-                _context.SaveChanges();
-            }
-        }
     }
 }
