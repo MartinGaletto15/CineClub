@@ -1,64 +1,78 @@
 using Microsoft.AspNetCore.Mvc;
-using Application.Services;
+using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Dtos;
 
-namespace Web.Controllers;
-
-public class MovieController : ControllerBase
+namespace Web.Controllers
 {
-    private readonly MovieService _movieService;
-
-    public MovieController(MovieService movieService)
+    [ApiController]
+    public class MovieController : ControllerBase
     {
-        _movieService = movieService;
+        private readonly IMovieService _movieService;
+
+        public MovieController(IMovieService movieService)
+        {
+            _movieService = movieService;
+        }
+
+        [HttpGet("api/movies/{id}")]
+        public async Task<ActionResult<MovieDto>> GetMovieById([FromRoute] int id)
+        {
+            try
+            {
+                var movie = await _movieService.GetMovieByIdAsync(id);
+                return Ok(movie);
+            }
+            catch (Domain.Exceptions.AppValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("api/movies")]
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetAllMovies()
+        {
+            var movies = await _movieService.GetAllMoviesAsync();
+            return Ok(movies);
+        }
+
+        [HttpPost("api/movies")]
+        public async Task<ActionResult<MovieDto>> CreateMovie([FromBody] CreateMovieRequest createMovieDto)
+        {
+            var movieDto = await _movieService.CreateMovieAsync(createMovieDto);
+
+            return CreatedAtAction(nameof(GetMovieById), new { id = movieDto.id }, movieDto);
+        }
+
+        [HttpPut("api/movies/{id}")]
+        public async Task<ActionResult<MovieDto>> UpdateMovie([FromRoute] int id, [FromBody] UpdateMovieRequest updateMovieDto)
+        {
+            try
+            {
+                var movie = await _movieService.UpdateMovieAsync(id, updateMovieDto);
+                return Ok(movie);
+            }
+            catch (Domain.Exceptions.AppValidationException ex)
+            {
+                if (ex.Message.Contains("coinciden"))
+                    return BadRequest(ex.Message);
+                
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("api/movies/{id}")]
+        public async Task<ActionResult> DeleteMovie([FromRoute] int id)
+        {
+            try
+            {
+                await _movieService.DeleteMovieAsync(id);
+                return NoContent();
+            }
+            catch (Domain.Exceptions.AppValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
-
-    [HttpGet("api/movies/{id}")]
-    public ActionResult<MovieDto> GetMovieById([FromRoute] int id)
-    {
-        var movie = _movieService.GetMovieById(id);
-
-        return Ok(movie);
-    }
-
-    [HttpGet("api/movies")]
-    public ActionResult<List<MovieDto>> GetAllMovies()
-    {
-        var movies = _movieService.GetAllMovies();
-
-        return Ok(movies);
-    }
-
-    [HttpPost("api/movies")]
-    public ActionResult<MovieDto> CreateMovie([FromBody] CreateMovieRequest createMovieDto)
-    {
-        var movie = _movieService.CreateMovie(
-            createMovieDto.Title,
-            createMovieDto.DirectorId,
-            createMovieDto.GenreId,
-            createMovieDto.ReleaseDate,
-            createMovieDto.Duration,
-            createMovieDto.Synopsis,
-            createMovieDto.Poster
-        );
-
-        return CreatedAtAction(nameof(GetMovieById), new { id = movie.Id }, MovieDto.Create(movie));
-    }
-
-    [HttpPut("api/movies/{id}")]
-    public ActionResult<MovieDto> UpdateMovie([FromRoute] int id, [FromBody] UpdateMovieRequest updateMovieDto)
-    {
-        var movie = _movieService.UpdateMovie(id, updateMovieDto.Id, updateMovieDto.Title, updateMovieDto.DirectorId, updateMovieDto.GenreId, updateMovieDto.ReleaseDate, updateMovieDto.Duration, updateMovieDto.Synopsis, updateMovieDto.Poster);
-
-        return Ok(movie);
-    }
-
-    [HttpDelete("api/movies/{id}")]
-    public ActionResult DeleteMovie([FromRoute] int id)
-    {
-        _movieService.DeleteMovie(id);
-        return NoContent();
-    }
-
 }

@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 // INYECCIÓN DE DEPENDENCIAS
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<MovieService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IViewRepository, ViewRepository>();
 builder.Services.AddScoped<IViewService, ViewService>();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
