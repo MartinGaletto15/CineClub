@@ -10,5 +10,6 @@ namespace Domain.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<int> SaveChangesAsync();
     }
 } 

@@ -1,34 +1,25 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entities
+namespace Application.Models.Requests
 {
-    public class User
+    public class UserRequest
     {
-        [Required]
-        public int Id { get; set; }
-
         [Required, MaxLength(100)]
         public string Name { get; set; } = string.Empty;
 
         [Required, MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
 
-        [Required, MaxLength(100)]
+        [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
 
-        [Required, MaxLength(100)]
+        [Required, MinLength(6)]
         public string Password { get; set; } = string.Empty;
 
         public string Avatar { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        public UserRole Role { get; set; }
-
-        // Relación: un usuario puede tener muchas vistas
-        public ICollection<View>? Views { get; set; }
+        public string Role { get; set; } = "User";
     }
 }
-
-//Ya la tenés creada y está perfecta. Solo asegurate de que tenga la relación con las vistas, ya que en el UML un usuario tiene muchas vistas.
-//LINEA 29

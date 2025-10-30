@@ -20,7 +20,7 @@ namespace Application.Services
         {
             var movie = await _MovieRepository.GetByIdAsync(id)
                     ?? throw new AppValidationException("Pelicula no encontrada");
-            
+
             return MovieDto.Create(movie);
         }
 
@@ -29,7 +29,7 @@ namespace Application.Services
             var movies = await _MovieRepository.GetAllAsync();
             if (movies == null || !movies.Any())
             {
-                return new List<MovieDto>(); 
+                return new List<MovieDto>();
             }
             return MovieDto.Create(movies);
         }
@@ -48,10 +48,12 @@ namespace Application.Services
             };
 
             await _MovieRepository.AddAsync(movie);
-            
-            return MovieDto.Create(movie);
-        }
 
+            // 🔹 Volvemos a traer la película con sus relaciones incluidas (usando el método que ya tenés)
+            var movieWithRelations = await _MovieRepository.GetByIdAsync(movie.Id);
+
+            return MovieDto.Create(movieWithRelations!);
+        }
         public async Task<MovieDto> UpdateMovieAsync(int id, UpdateMovieRequest updateRequest)
         {
             if (id != updateRequest.Id)
