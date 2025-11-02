@@ -18,17 +18,6 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Ejemplo de relación (si querés definirlas manualmente)
-            modelBuilder.Entity<View>()
-                .HasOne(v => v.User)
-                .WithMany()
-                .HasForeignKey(v => v.UserId);
-
-            modelBuilder.Entity<View>()
-                .HasOne(v => v.Movie)
-                .WithMany()
-                .HasForeignKey(v => v.MovieId);
         }
     }
 }

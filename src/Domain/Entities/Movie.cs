@@ -15,11 +15,6 @@ public class Movie
     public int DirectorId { get; set; } 
     public Director Director { get; set; } = null!;
 
-    // Clave Foránea para Genre
-    [Required]
-    public int GenreId { get; set; } 
-    public Genre Genre { get; set; } = null!;
-
     [Required]
     public DateOnly ReleaseDate { get; set; }
 
@@ -29,4 +24,6 @@ public class Movie
     public string? Synopsis { get; set; }
 
     public string? Poster { get; set; }
+
+    public ICollection<Genre> Genres { get; set; } = new List<Genre>();
 }

@@ -16,7 +16,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbSet
                 .Include(m => m.Director)
-                .Include(m => m.Genre)
+                .Include(m => m.Genres)
                 .ToListAsync();
         }
 
@@ -24,7 +24,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbSet
                 .Include(m => m.Director)
-                .Include(m => m.Genre)
+                .Include(m => m.Genres)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 

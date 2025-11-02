@@ -61,9 +61,6 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Duration")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Poster")
                         .HasColumnType("TEXT");
 
@@ -81,8 +78,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DirectorId");
-
-                    b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
                 });
@@ -135,13 +130,13 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateFinish")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("DateFinish")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("Rating")
+                    b.Property<float?>("Rating")
                         .HasColumnType("REAL");
 
                     b.Property<int>("UserId")
@@ -156,6 +151,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("Views");
                 });
 
+            modelBuilder.Entity("GenreMovie", b =>
+                {
+                    b.Property<int>("GenresId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("GenresId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("GenreMovie");
+                });
+
             modelBuilder.Entity("Domain.Entities.Movie", b =>
                 {
                     b.HasOne("Domain.Entities.Director", "Director")
@@ -164,15 +174,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Director");
-
-                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("Domain.Entities.View", b =>
@@ -192,6 +194,21 @@ namespace Infrastructure.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GenreMovie", b =>
+                {
+                    b.HasOne("Domain.Entities.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

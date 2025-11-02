@@ -36,20 +36,21 @@ namespace Application.Services
             {
                 UserId = dto.UserId,
                 MovieId = dto.MovieId,
-                Rating = dto.Rating,
-                DateFinish = dto.DateFinish
+                Rating = dto.Rating?? 0,
+                DateFinish = dto.DateFinish?? DateTime.Now
             };
             await _viewRepository.AddAsync(view);
             return ViewDto.Create(view);
         }
 
-        public async Task<ViewDto> UpdateAsync(UpdateViewRequest dto)
+        public async Task<ViewDto> UpdateAsync(int id, UpdateViewRequest dto)
         {
-            var view = await _viewRepository.GetByIdAsync(dto.Id)
+            var view = await _viewRepository.GetByIdAsync(id)
                     ?? throw new AppValidationException("Pelicula no encontrada");
 
-            view.Rating = dto.Rating;
-            view.DateFinish = dto.DateFinish;
+            view.MovieId = dto.MovieId?? view.MovieId;
+            view.Rating = dto.Rating?? view.Rating;
+            view.DateFinish = dto.DateFinish?? view.DateFinish;
 
             await _viewRepository.UpdateAsync(view);
             return ViewDto.Create(view);

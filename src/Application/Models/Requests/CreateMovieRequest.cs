@@ -11,14 +11,17 @@ public record CreateMovieRequest(
     int DirectorId,
 
     [Required]
-    int GenreId,
+    DateOnly ReleaseDate,
 
-    DateOnly? ReleaseDate = null,
+    [Required]
+    decimal Duration,
 
-    decimal? Duration = null,
+    string Synopsis,
 
-    string? Synopsis = null,
+    [Required]
+    string Poster,
 
-    string? Poster = null
+    [Required]
+    List<int> GenreIds
 );
 

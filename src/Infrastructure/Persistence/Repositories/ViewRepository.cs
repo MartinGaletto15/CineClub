@@ -20,5 +20,21 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(v => v.UserId == userId)
                 .ToListAsync();
         }
+
+        public override async Task<IEnumerable<View>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(v => v.User)
+                .Include(v => v.Movie)
+                .ToListAsync();
+        }
+
+        public override async Task<View?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(v => v.User)
+                .Include(v => v.Movie)
+                .FirstOrDefaultAsync(v => v.Id == id);
+        }
     }
 }

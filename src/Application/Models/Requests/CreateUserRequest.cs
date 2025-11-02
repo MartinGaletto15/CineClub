@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Entities;
 
 namespace Application.Models.Requests
 {
-    public class UserRequest
+    public class CreateUserRequest
     {
         [Required, MaxLength(100)]
         public string Name { get; set; } = string.Empty;
@@ -20,6 +21,6 @@ namespace Application.Models.Requests
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        public string Role { get; set; } = "User";
+        public UserRole Role { get; set; } = UserRole.User;
     }
 }

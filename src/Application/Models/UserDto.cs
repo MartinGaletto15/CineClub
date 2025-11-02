@@ -1,13 +1,37 @@
 namespace Application.Models
 {
-    public class UserDto
+    public record UserDto(
+        int Id,
+        string Name,
+        string LastName,
+        string Email,
+        string Avatar,
+        string Description,
+        string Role
+    )
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Avatar { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
+        public static UserDto Create(Domain.Entities.User entity)
+        {
+            return new UserDto(
+                entity.Id,
+                entity.Name,
+                entity.LastName,
+                entity.Email,
+                entity.Avatar,
+                entity.Description,
+                entity.Role.ToString()
+            );
+        }
+
+        public static List<UserDto> Create(IEnumerable<Domain.Entities.User> entities)
+        {
+            var listDto = new List<UserDto>();
+            foreach (var entity in entities)
+            {
+                listDto.Add(Create(entity));
+            }
+
+            return listDto;
+        }
     }
 }

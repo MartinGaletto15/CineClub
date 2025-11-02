@@ -3,7 +3,9 @@ using Domain.Entities;
 
 namespace Application.Dtos;
 
-public record DirectorDto(int id, string name)
+public record DirectorDto(
+    int id,
+    string name)
 {
     public static DirectorDto Create(Director entity)
     {

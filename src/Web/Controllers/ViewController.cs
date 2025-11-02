@@ -40,8 +40,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateViewRequest dto)
         {
-            dto.Id = id;
-            var result = await _viewService.UpdateAsync(dto);
+            var result = await _viewService.UpdateAsync(id, dto);
             return Ok(result);
         }
 

@@ -8,7 +8,7 @@ namespace Application.Interfaces
         Task<IEnumerable<ViewDto>> GetAllAsync();
         Task<ViewDto> GetByIdAsync(int id);
         Task<ViewDto> CreateAsync(CreateViewRequest createRequest);
-        Task<ViewDto> UpdateAsync(UpdateViewRequest updateRequest);
+        Task<ViewDto> UpdateAsync(int id, UpdateViewRequest updateRequest);
         Task DeleteAsync(int id);
     }
 }

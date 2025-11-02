@@ -44,10 +44,6 @@ namespace Application.Services
 
         public async Task<GenreDto> UpdateGenreAsync(int id, UpdateGenreRequest updateRequest)
         {
-            if (id != updateRequest.Id)
-            {
-                throw new AppValidationException("Los IDs de la ruta y del cuerpo no coinciden");
-            }
 
             var genre = await _genreRepository.GetByIdAsync(id)
                 ?? throw new AppValidationException("Género no encontrado");

@@ -3,23 +3,18 @@ using System.ComponentModel.DataAnnotations;
 namespace Application.Models.Requests;
 
 public record UpdateMovieRequest(
-    [Required]
-    int Id,
 
-    [Required]
-    string Title,
+    string? Title,
 
-    [Required]
-    int DirectorId,
+    int? DirectorId,
 
-    [Required]
-    int GenreId,
+    DateOnly? ReleaseDate,
 
-    DateOnly? ReleaseDate = null,
+    decimal? Duration,
 
-    decimal? Duration = null,
+    string? Synopsis,
 
-    string? Synopsis = null,
+    string? Poster,
 
-    string? Poster = null
+    List<int>? GenreIds
 );

@@ -31,14 +31,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserRequest request)
+        public async Task<IActionResult> Create(CreateUserRequest request)
         {
             var user = await _service.CreateAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UserRequest request)
+        public async Task<IActionResult> Update(int id, UpdateUserRequest request)
         {
             var user = await _service.UpdateAsync(id, request);
             return Ok(user);

@@ -8,19 +8,19 @@ namespace Domain.Entities
         [Required]
         public int Id { get; set; }
 
-        // Relación con User
         [Required]
-        [ForeignKey("User")]
         public int UserId { get; set; }
-        public User? User { get; set; }
 
-        // Relación con Movie
+        [Required, ForeignKey("UserId")] // Le dice a EF que esta propiedad usa 'UserId'
+        public User User { get; set; } = null!;
+
         [Required]
-        [ForeignKey("Movie")]
         public int MovieId { get; set; }
-        public Movie? Movie { get; set; }
 
-        public float Rating { get; set; }
-        public DateTime DateFinish { get; set; }
+        [Required, ForeignKey("MovieId")] // Le dice a EF que esta propiedad usa 'MovieId'
+        public Movie Movie { get; set; } = null!;
+
+        public float? Rating { get; set; }
+        public DateTime? DateFinish { get; set; }
     }
 }

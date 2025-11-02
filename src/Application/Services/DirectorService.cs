@@ -44,10 +44,6 @@ namespace Application.Services
 
         public async Task<DirectorDto> UpdateDirectorAsync(int id, UpdateDirectorRequest updateRequest)
         {
-            if (id != updateRequest.Id)
-            {
-                throw new AppValidationException("Los IDs de la ruta y del cuerpo no coinciden");
-            }
 
             var director = await _directorRepository.GetByIdAsync(id)
                     ?? throw new AppValidationException("Director no encontrado");

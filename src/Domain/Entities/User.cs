@@ -24,11 +24,5 @@ namespace Domain.Entities
 
         [Required]
         public UserRole Role { get; set; }
-
-        // Relación: un usuario puede tener muchas vistas
-        public ICollection<View>? Views { get; set; }
     }
 }
-
-//Ya la tenés creada y está perfecta. Solo asegurate de que tenga la relación con las vistas, ya que en el UML un usuario tiene muchas vistas.
-//LINEA 29

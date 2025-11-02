@@ -1,6 +1,8 @@
 
 namespace Application.Dtos;
-public record GenreDto(int id, string name)
+public record GenreDto(
+    int id,
+    string name)
 {
     public static GenreDto Create(Domain.Entities.Genre entity)
     {
