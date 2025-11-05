@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(CineClubContext))]
-    [Migration("20251102074550_InitialCreate")]
+    [Migration("20251105190528_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -133,7 +133,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DateFinish")
+                    b.Property<DateOnly?>("DateFinish")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MovieId")

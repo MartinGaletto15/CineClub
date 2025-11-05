@@ -113,7 +113,7 @@ namespace Infrastructure.Migrations
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     MovieId = table.Column<int>(type: "INTEGER", nullable: false),
                     Rating = table.Column<float>(type: "REAL", nullable: true),
-                    DateFinish = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    DateFinish = table.Column<DateOnly>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

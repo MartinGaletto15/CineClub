@@ -130,7 +130,7 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("DateFinish")
+                    b.Property<DateOnly?>("DateFinish")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MovieId")
