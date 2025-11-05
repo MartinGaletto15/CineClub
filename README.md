@@ -46,6 +46,7 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 ┗ 📂 Web → Controladores, Middlewares, Swagger, JWT
 
 
+
 ---
 
 ## 🛠️ Tecnologías Utilizadas
@@ -67,7 +68,7 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 ## ✅ Requisitos del TP Cumplidos
 
 | Requisito | Estado |
-
+|-----------|:------:|
 | Arquitectura por capas | ✅ |
 | CRUD completo de entidades | ✅ |
 | Patrón Repositorio + Servicio | ✅ |
@@ -81,7 +82,7 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 ## ⏳ Requisitos Restantes para Aprobación Directa
 
 | Requisito | Estado | Detalle |
-
+|-----------|:------:|---------|
 | Variable de entorno para el JWT Secret en Azure | ⏳ | Se realiza durante el deploy |
 | Migración a SQL Server en Azure | ⏳ | Se realiza antes de deploy |
 | CI/CD con GitHub Actions | ⏳ | Configura automatización de deploy |
@@ -92,6 +93,7 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 ## 🔐 Autenticación JWT
 
 ### Login
+
 POST /api/User/Login
 
 
