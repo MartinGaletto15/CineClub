@@ -51,11 +51,6 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
     }
 }
 

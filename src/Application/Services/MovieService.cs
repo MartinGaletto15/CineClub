@@ -10,18 +10,20 @@ namespace Application.Services
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _MovieRepository;
-        private readonly IGenreRepository _genreRepository; 
+        private readonly IGenreRepository _genreRepository;
+        private readonly IDirectorRepository _directorRepository;
 
-        public MovieService(IMovieRepository movieRepository, IGenreRepository genreRepository)
+        public MovieService(IMovieRepository movieRepository, IGenreRepository genreRepository, IDirectorRepository directorRepository)
         {
             _MovieRepository = movieRepository;
             _genreRepository = genreRepository;
+            _directorRepository = directorRepository;
         }
 
         public async Task<MovieDto> GetMovieByIdAsync(int id)
         {
             var movie = await _MovieRepository.GetByIdAsync(id)
-                        ?? throw new AppValidationException("Pelicula no encontrada");
+                    ?? throw new AppValidationException("Pelicula no encontrada");
 
             return MovieDto.Create(movie);
         }
@@ -38,6 +40,13 @@ namespace Application.Services
 
         public async Task<MovieDto> CreateMovieAsync(CreateMovieRequest createRequest)
         {
+
+            var director = await _directorRepository.GetByIdAsync(createRequest.DirectorId);
+            if (director == null)
+            {
+                throw new AppValidationException($"El Director con ID {createRequest.DirectorId} no existe.");
+            }
+
             var movie = new Movie
             {
                 Title = createRequest.Title,
@@ -54,7 +63,7 @@ namespace Application.Services
             {
                 // Buscamos las entidades Genre que coincidan con los IDs
                 var genres = await _genreRepository.FindAsync(g => createRequest.GenreIds.Contains(g.Id));
-                
+
                 // Asignamos las entidades a la navegación
                 movie.Genres = genres.ToList();
             }
@@ -68,8 +77,8 @@ namespace Application.Services
 
         public async Task<MovieDto> UpdateMovieAsync(int id, UpdateMovieRequest updateRequest)
         {
-            var movie = await _MovieRepository.GetByIdAsync(id) 
-                        ?? throw new AppValidationException("Pelicula no encontrada");
+            var movie = await _MovieRepository.GetByIdAsync(id)
+                    ?? throw new AppValidationException("Pelicula no encontrada");
 
             movie.Title = updateRequest.Title ?? movie.Title;
             movie.DirectorId = updateRequest.DirectorId ?? movie.DirectorId;
@@ -83,11 +92,18 @@ namespace Application.Services
             {
                 var newGenres = await _genreRepository.FindAsync(g => updateRequest.GenreIds.Contains(g.Id));
 
+                var requestedIdsCount = updateRequest.GenreIds.Distinct().Count();
+
+                if (newGenres.Count() != requestedIdsCount)
+                {
+                    throw new AppValidationException($"Uno o mas generos no validos");
+                }
+
                 movie.Genres = newGenres.ToList();
             }
 
             await _MovieRepository.UpdateAsync(movie);
-            
+
             var movieActualizada = await _MovieRepository.GetByIdAsync(id);
 
             return MovieDto.Create(movieActualizada!);
@@ -95,6 +111,7 @@ namespace Application.Services
 
         public async Task DeleteMovieAsync(int id)
         {
+            await GetMovieByIdAsync(id);
             await _MovieRepository.DeleteAsync(id);
         }
     }

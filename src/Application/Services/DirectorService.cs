@@ -57,6 +57,7 @@ namespace Application.Services
 
         public async Task DeleteDirectorAsync(int id)
         {
+            await GetDirectorByIdAsync(id);
             await _directorRepository.DeleteAsync(id);
         }
     }

@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 
 
@@ -19,15 +20,15 @@ namespace Application.Services
         public async Task<IEnumerable<UserDto>> GetAllAsync()
         {
             var users = await _repository.GetAllAsync()
-                    ?? throw new Exception("Usuarios no encontrados");
+                    ?? throw new AppValidationException("Usuarios no encontrados");
 
             return UserDto.Create(users);
         }
 
         public async Task<UserDto?> GetByIdAsync(int id)
         {
-            var user = await _repository.GetByIdAsync(id);
-            if (user == null) return null;
+            var user = await _repository.GetByIdAsync(id)
+                    ?? throw new AppValidationException("Usuario no encontrado");
 
             return UserDto.Create(user);
         }
@@ -46,15 +47,14 @@ namespace Application.Services
             };
 
             await _repository.AddAsync(user);
-            await _repository.SaveChangesAsync();
 
             return UserDto.Create(user);
         }
 
         public async Task<UserDto> UpdateAsync(int id, UpdateUserRequest request)
         {
-            var user = await _repository.GetByIdAsync(id);
-            if (user == null) throw new Exception("User not found");
+            var user = await _repository.GetByIdAsync(id)
+                    ?? throw new AppValidationException("Usuario no encontrado");
 
             user.Name = request.Name?? user.Name;
             user.LastName = request.LastName?? user.LastName;
@@ -64,18 +64,15 @@ namespace Application.Services
             user.Role = request.Role?? user.Role;
 
             await _repository.UpdateAsync(user);
-            await _repository.SaveChangesAsync();
 
             return UserDto.Create(user);
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var user = await _repository.GetByIdAsync(id);
-            if (user == null) return false;
+            await GetByIdAsync(id);
 
-            await _repository.DeleteAsync(user.Id);
-            await _repository.SaveChangesAsync();
+            await _repository.DeleteAsync(id);
             return true;
         }
     }

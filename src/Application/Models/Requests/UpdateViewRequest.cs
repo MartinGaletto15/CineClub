@@ -6,6 +6,6 @@ namespace Application.Models.Requests
     {
         public int? MovieId { get; set; }
         public float? Rating { get; set; }
-        public DateTime? DateFinish { get; set; }
+        public DateOnly? DateFinish { get; set; }
     }
 }

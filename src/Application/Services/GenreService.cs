@@ -57,6 +57,7 @@ namespace Application.Services
 
         public async Task DeleteGenreAsync(int id)
         {
+            await GetGenreByIdAsync(id);
             await _genreRepository.DeleteAsync(id);
         }
     }

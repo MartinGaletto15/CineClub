@@ -21,6 +21,6 @@ namespace Domain.Entities
         public Movie Movie { get; set; } = null!;
 
         public float? Rating { get; set; }
-        public DateTime? DateFinish { get; set; }
+        public DateOnly? DateFinish { get; set; }
     }
 }

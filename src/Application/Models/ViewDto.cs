@@ -6,7 +6,7 @@ namespace Application.Models;
 public record ViewDto(
     int Id,
     float? Rating,
-    DateTime? DateFinish,
+    DateOnly? DateFinish,
     string UserName,
     string MovieTitle
 )
