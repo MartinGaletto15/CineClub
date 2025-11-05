@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Dtos;
+using Domain.Exceptions;
+using System.Timers;
 
 namespace Web.Controllers
 {
@@ -9,10 +11,12 @@ namespace Web.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
+        private readonly IMovieExternalService _movieExternalService;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(IMovieService movieService, IMovieExternalService movieExternalService)
         {
             _movieService = movieService;
+            _movieExternalService = movieExternalService;
         }
 
         [HttpGet("api/movies/{id}")]
@@ -50,5 +54,17 @@ namespace Web.Controllers
             await _movieService.DeleteMovieAsync(id);
             return NoContent();
         }
+
+        [HttpGet("Find")]
+        public async Task<IActionResult> FindMovie([FromQuery] string? title)
+        {
+            if(string.IsNullOrWhiteSpace(title))
+            {
+                throw new AppValidationException("El titulo es obligatorio");
+            }
+            var movie = await _movieExternalService.SearchMovieAsync(title);
+            return movie is null ? NotFound("No se encontró la película") : Ok(movie);
+        }
+
     }
 }
