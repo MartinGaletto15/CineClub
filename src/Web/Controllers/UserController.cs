@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -15,6 +16,15 @@ namespace Web.Controllers
             _service = service;
         }
 
+        // LOGIN
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        {
+            var token = await _service.LoginAsync(request);
+            return Ok(new { Token = token });
+        }
+
+        [Authorize] //Para probar este EndPoint Por ejemplo
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

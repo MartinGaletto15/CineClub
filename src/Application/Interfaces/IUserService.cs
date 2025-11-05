@@ -1,6 +1,7 @@
 using Application.Models;
 using Application.Models.Requests;
 
+
 namespace Application.Interfaces
 {
     public interface IUserService
@@ -10,5 +11,7 @@ namespace Application.Interfaces
         Task<UserDto> CreateAsync(CreateUserRequest request);
         Task<UserDto> UpdateAsync(int id, UpdateUserRequest request);
         Task<bool> DeleteAsync(int id);
+        Task<string> LoginAsync(UserLoginRequest request); //Método de login en IUserService
+
     }
 }

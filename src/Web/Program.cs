@@ -5,18 +5,50 @@ using Web.Middleware;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// AÑADE LOS SERVICIOS DE CONTROLADORES
 builder.Services.AddControllers();
-
-// AÑADE LOS SERVICIOS DEL GENERADOR DE SWAGGER
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// INYECCIÓN DE DEPENDENCIAS
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CineClub API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,          // CAMBIADO
+        Scheme = "bearer",                       // CAMBIADO (todo minúscula)
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Ingrese el token JWT usando: Bearer {token}"
+    });
+
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+
+// Inyección de dependencias
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IViewRepository, ViewRepository>();
@@ -29,25 +61,42 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-// BASE DE DATOS SQLITE
+// Base de datos
 builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlite(
     builder.Configuration["ConnectionStrings:DbConnectionString"]
 ));
 
+// JWT Authentication
+var secret = builder.Configuration["JwtSettings:Secret"]
+    ?? throw new Exception("❌ No se encontró la key JWT. Asegurate de configurar JwtSettings:Secret en appsettings.json o como variable de ambiente.");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-// HABILITA EL MIDDLEWARE DE SWAGGER
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// HABILITA EL MANEJADOR DE ERRORES GLOBAL
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGet("/", () => "Hello World!");
-
 app.MapControllers();
-
 app.Run();
