@@ -5,6 +5,7 @@ using Web.Middleware;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Application.Interfaces;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -59,12 +60,29 @@ builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieExternalService, MovieExternalService>();
+
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // Base de datos
 builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlite(
     builder.Configuration["ConnectionStrings:DbConnectionString"]
 ));
+
+ApiClientConfiguration apiClientConfiguration = new()
+{
+    RetryCount = 2,
+    retryAttemptInSeconds = 3,
+    DurationOfBreakInSeconds = 120,
+    HandledEventsAllowedBeforeBreaking = 10
+};
+
+builder.Services.AddHttpClient("OMDb", client =>
+{
+    client.BaseAddress = new Uri("https://www.omdbapi.com/");
+})
+.AddPolicyHandler(PollyResiliencePolicies.GetRetryPolicy(apiClientConfiguration))
+.AddPolicyHandler(PollyResiliencePolicies.GetCircuitBreakerPolicy(apiClientConfiguration));
 
 // JWT Authentication
 var secret = builder.Configuration["JwtSettings:Secret"]
