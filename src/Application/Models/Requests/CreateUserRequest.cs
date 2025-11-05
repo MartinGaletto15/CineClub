@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Entities;
 
 namespace Application.Models.Requests
 {
@@ -19,8 +18,7 @@ namespace Application.Models.Requests
 
         public string Avatar { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-
-        [Required]
-        public UserRole Role { get; set; } = UserRole.User;
+        
+        //  Se elimina Role completamente
     }
 }

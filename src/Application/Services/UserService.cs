@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
-
 namespace Application.Services
 {
     public class UserService : IUserService
@@ -38,7 +37,6 @@ namespace Application.Services
 
             return UserDto.Create(user);
         }
-
         public async Task<UserDto> CreateAsync(CreateUserRequest request)
         {
             var user = new User
@@ -49,7 +47,9 @@ namespace Application.Services
                 Password = request.Password,
                 Avatar = request.Avatar,
                 Description = request.Description,
-                Role = request.Role
+
+                //se fija como User por defecto
+                Role = UserRole.User
             };
 
             await _repository.AddAsync(user);
@@ -57,6 +57,7 @@ namespace Application.Services
 
             return UserDto.Create(user);
         }
+
 
         public async Task<UserDto> UpdateAsync(int id, UpdateUserRequest request)
         {

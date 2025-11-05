@@ -24,4 +24,3 @@ public record CreateMovieRequest(
     [Required]
     List<int> GenreIds
 );
-

@@ -68,7 +68,7 @@ builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlite(
 
 // JWT Authentication
 var secret = builder.Configuration["JwtSettings:Secret"]
-    ?? throw new Exception("❌ No se encontró la key JWT. Asegurate de configurar JwtSettings:Secret en appsettings.json o como variable de ambiente.");
+    ?? throw new Exception("No se encontró la key JWT. Asegurate de configurar JwtSettings:Secret en appsettings.json o como variable de ambiente.");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace Application.Dtos;
 
-// 2. Corrige tu MovieDto
 public record MovieDto(
     int id,
     string title,
