@@ -26,7 +26,6 @@ namespace Web.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var user = await _service.GetByIdAsync(id);
-            if (user == null) return NotFound("User not found");
             return Ok(user);
         }
 
@@ -47,8 +46,7 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _service.DeleteAsync(id);
-            if (!success) return NotFound("User not found");
+            await _service.DeleteAsync(id);
             return NoContent();
         }
     }
