@@ -15,7 +15,7 @@
 ## 👥 Integrantes
 
 | Nombre | Rol |
-
+|-------|-----|
 | **Kevin Kener** | Desarrollo Backend / Arquitectura |
 | **Martín Galetto** | Desarrollo Backend / Documentación / Testing |
 
