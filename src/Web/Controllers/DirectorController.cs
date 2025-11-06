@@ -18,7 +18,6 @@ namespace Web.Controllers
         }
 
         //VER UN DIRECTOR - Cualquier usuario autenticado
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<DirectorDto>> GetDirectorById([FromRoute] int id)
         {
@@ -26,8 +25,7 @@ namespace Web.Controllers
             return Ok(director);
         }
 
-        //LISTAR DIRECTORES - Cualquier usuario autenticado
-        [Authorize]
+        //LISTAR DIRECTORES - Cualquier persona
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DirectorDto>>> GetAllDirectors()
         {

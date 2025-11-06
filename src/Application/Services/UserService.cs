@@ -89,10 +89,10 @@ namespace Application.Services
             var user = await _repository.GetByEmailAsync(request.Email);
 
             if (user == null || user.Password != request.Password)
-                throw new Exception("Credenciales inválidas");
+                throw new AppValidationException("Credenciales inválidas");
 
             var secret = _configuration["JwtSettings:Secret"]
-                ?? throw new Exception("No se encontró la clave JWT. Configurá JwtSettings:Secret.");
+                ?? throw new AppValidationException("No se encontró la clave JWT.");
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

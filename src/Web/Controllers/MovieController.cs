@@ -22,7 +22,6 @@ namespace Web.Controllers
         }
 
         //VER UNA PELÍCULA (requiere estar autenticado)
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDto>> GetMovieById([FromRoute] int id)
         {
@@ -31,7 +30,6 @@ namespace Web.Controllers
         }
 
         //LISTAR PELÍCULAS (requiere estar autenticado)
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetAllMovies()
         {

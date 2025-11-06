@@ -30,7 +30,21 @@ namespace Application.Services
         {
             var view = await _viewRepository.GetByIdAsync(id)
                 ?? throw new AppValidationException("Id de vista no encontrada");
+
             return ViewDto.Create(view);
+        }
+        
+        public async Task<IEnumerable<ViewDto>> GetByUserIdAsync(int userId)
+        {
+            var userExists = await _userRepository.GetByIdAsync(userId);
+            if (userExists == null)
+            {
+                throw new AppValidationException($"El Usuario con ID {userId} no existe.");
+            }
+
+            var views = await _viewRepository.GetViewsByUserIdAsync(userId);
+
+            return ViewDto.Create(views);
         }
 
         public async Task<ViewDto> CreateAsync(CreateViewRequest dto)
@@ -67,7 +81,7 @@ namespace Application.Services
         public async Task<ViewDto> UpdateAsync(int id, UpdateViewRequest dto)
         {
             var view = await _viewRepository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("ID de vista no encontrada");
+                     ?? throw new AppValidationException("ID de vista no encontrada");
 
             if (dto.MovieId.HasValue)
             {

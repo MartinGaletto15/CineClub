@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Domain.Exceptions;
 
 namespace Web.Controllers
 {
@@ -27,7 +28,6 @@ namespace Web.Controllers
         }
 
         //CUALQUIER USUARIO AUTENTICADO PUEDE VER SU PROPIO PERFIL
-        //si intenta ver otro → depende del rol
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -36,7 +36,7 @@ namespace Web.Controllers
 
             //Si es User, solo puede ver su propio perfil
             if (currentUserRole == "User" && id != currentUserId)
-                return Forbid("No tienes permisos para ver otros usuarios.");
+                throw new AppValidationException("No tienes permisos para ver otros usuarios.");
 
             var user = await _service.GetByIdAsync(id);
             if (user == null) return NotFound("User not found");

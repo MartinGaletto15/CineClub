@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Domain.Exceptions;
 
 namespace WebAPI.Controllers
 {
@@ -12,6 +13,8 @@ namespace WebAPI.Controllers
     public class ViewController : ControllerBase
     {
         private readonly IViewService _viewService;
+        // No necesitas IUserService si solo vas a verificar permisos
+        // private readonly IUserService _UserService; 
 
         public ViewController(IViewService viewService)
         {
@@ -27,7 +30,9 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        //VER UNA VISUALIZACIÓN - SOLO ADMIN / SUPERADMIN
+        //BUSCAR UNA VISUALIZACION (POR SU ID DE VISTA) - SOLO ADMIN / SUPERADMIN
+        // NOTA: Cambié el nombre del método a GetById para que sea claro
+        // y no entre en conflicto con el otro método.
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -36,12 +41,36 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        //BUSCAR TODAS LAS VISTAS ASOCIADAS A UN USUARIO PARTICULAR - CUALQUIER USUARIO
+        [Authorize]
+        [HttpGet("User/{userId}")]
+        public async Task<IActionResult> GetViewsByUserId(int userId)
+        {
+            // Obtener el ID del usuario que hace la llamada
+            var loggedInUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(loggedInUserIdClaim, out var loggedInUserId))
+            {
+                throw new AppValidationException("No se pudo identificar al usuario autenticado.");
+            }
+
+            var isAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
+
+            // Validar permisos
+            if (loggedInUserId != userId && !isAdmin)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden,
+                    new { message = "No tienes permisos para ver las visualizaciones de otro usuario." });
+            }
+            
+            var result = await _viewService.GetByUserIdAsync(userId);
+            return Ok(result);
+        }
+
         //REGISTRAR VISUALIZACIÓN - CUALQUIER USUARIO LOGUEADO
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(CreateViewRequest dto)
         {
-            //Obtiene el ID del usuario desde el token
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(userIdClaim, out var userId))
