@@ -14,7 +14,7 @@ public record CreateMovieRequest(
     DateOnly ReleaseDate,
 
     [Required]
-    decimal Duration,
+    int Duration,
 
     string Synopsis,
 

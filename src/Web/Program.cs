@@ -65,7 +65,7 @@ builder.Services.AddScoped<IMovieExternalService, MovieExternalService>();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // Base de datos
-builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlite(
+builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlServer(
     builder.Configuration["ConnectionStrings:DbConnectionString"]
 ));
 

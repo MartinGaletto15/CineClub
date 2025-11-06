@@ -8,7 +8,7 @@ public record MovieDto(
     string title,
     string DirectorName,
     DateOnly releaseDate,
-    decimal duration,
+    int duration,
     string? synopsis,
     string? poster,
     List<string> Genres

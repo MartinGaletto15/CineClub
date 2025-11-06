@@ -19,7 +19,7 @@ public class Movie
     public DateOnly ReleaseDate { get; set; }
 
     [Required]
-    public decimal Duration { get; set; }
+    public int Duration { get; set; }
 
     public string? Synopsis { get; set; }
 

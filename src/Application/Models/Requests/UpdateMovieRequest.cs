@@ -10,7 +10,7 @@ public record UpdateMovieRequest(
 
     DateOnly? ReleaseDate,
 
-    decimal? Duration,
+    int? Duration,
 
     string? Synopsis,
 
