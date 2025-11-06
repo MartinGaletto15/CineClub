@@ -1,17 +1,15 @@
 using Application.Models;
 using Application.Models.Requests;
 
-
 namespace Application.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDto>> GetAllAsync();
-        Task<UserDto?> GetByIdAsync(int id);
-        Task<UserDto> CreateAsync(CreateUserRequest request);
-        Task<UserDto> UpdateAsync(int id, UpdateUserRequest request);
-        Task<bool> DeleteAsync(int id);
-        Task<string> LoginAsync(UserLoginRequest request); //Método de login en IUserService
-
+        IEnumerable<UserDto> GetAll();
+        UserDto? GetById(int id);
+        UserDto Create(CreateUserRequest request);
+        UserDto Update(int id, UpdateUserRequest request);
+        bool Delete(int id);
+        string Login(UserLoginRequest request); //Método de login en IUserService
     }
 }

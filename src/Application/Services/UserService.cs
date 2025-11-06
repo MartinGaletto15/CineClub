@@ -23,22 +23,23 @@ namespace Application.Services
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllAsync()
+        public IEnumerable<UserDto> GetAll()
         {
-            var users = await _repository.GetAllAsync()
-                    ?? throw new AppValidationException("Usuarios no encontrados");
+            var users = _repository.GetAll()
+                           ?? throw new AppValidationException("Usuarios no encontrados");
 
             return UserDto.Create(users);
         }
 
-        public async Task<UserDto?> GetByIdAsync(int id)
+        public UserDto? GetById(int id)
         {
-            var user = await _repository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Usuario no encontrado");
+            var user = _repository.GetById(id)
+                           ?? throw new AppValidationException("Usuario no encontrado");
 
             return UserDto.Create(user);
         }
-        public async Task<UserDto> CreateAsync(CreateUserRequest request)
+
+        public UserDto Create(CreateUserRequest request)
         {
             var user = new User
             {
@@ -48,21 +49,18 @@ namespace Application.Services
                 Password = request.Password,
                 Avatar = request.Avatar,
                 Description = request.Description,
-
-                //se fija como User por defecto
-                Role = UserRole.User
+                Role = UserRole.User //se fija como User por defecto
             };
 
-            await _repository.AddAsync(user);
+            _repository.Add(user);
 
             return UserDto.Create(user);
         }
 
-
-        public async Task<UserDto> UpdateAsync(int id, UpdateUserRequest request)
+        public UserDto Update(int id, UpdateUserRequest request)
         {
-            var user = await _repository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Usuario no encontrado");
+            var user = _repository.GetById(id)
+                           ?? throw new AppValidationException("Usuario no encontrado");
 
             user.Name = request.Name ?? user.Name;
             user.LastName = request.LastName ?? user.LastName;
@@ -71,28 +69,28 @@ namespace Application.Services
             user.Description = request.Description ?? user.Description;
             user.Role = request.Role ?? user.Role;
 
-            await _repository.UpdateAsync(user);
+            _repository.Update(user);
 
             return UserDto.Create(user);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public bool Delete(int id)
         {
-            await GetByIdAsync(id);
-
-            await _repository.DeleteAsync(id);
+            // Verificamos que existe
+            GetById(id);
+            _repository.Delete(id);
             return true;
         }
 
-        public async Task<string> LoginAsync(UserLoginRequest request)
+        public string Login(UserLoginRequest request)
         {
-            var user = await _repository.GetByEmailAsync(request.Email);
+            var user = _repository.GetByEmail(request.Email);
 
             if (user == null || user.Password != request.Password)
                 throw new AppValidationException("Credenciales inválidas");
 
             var secret = _configuration["JwtSettings:Secret"]
-                ?? throw new AppValidationException("No se encontró la clave JWT.");
+                         ?? throw new AppValidationException("No se encontró la clave JWT.");
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

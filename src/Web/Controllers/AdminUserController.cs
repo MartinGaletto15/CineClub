@@ -18,20 +18,20 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
+        public IActionResult GetAll() => Ok(_service.GetAll());
 
         [HttpPut("{id}/role")]
-        public async Task<IActionResult> UpdateRole(int id, [FromBody] UpdateUserRequest request)
+        public IActionResult UpdateRole(int id, [FromBody] UpdateUserRequest request)
         {
-            var user = await _service.UpdateAsync(id, request);
+            var user = _service.Update(id, request);
             return Ok(user);
         }
 
         [Authorize(Roles = "SuperAdmin")] // Solo superadmin puede eliminar
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var success = await _service.DeleteAsync(id);
+            var success = _service.Delete(id);
             return success ? NoContent() : NotFound();
         }
     }

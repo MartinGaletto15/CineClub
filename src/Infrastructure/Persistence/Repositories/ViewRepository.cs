@@ -13,28 +13,28 @@ namespace Infrastructure.Persistence.Repositories
             _cineClubContext = context;
         }
 
-        public async Task<IEnumerable<View>> GetViewsByUserIdAsync(int userId)
+        public IEnumerable<View> GetViewsByUserId(int userId)
         {
-            return await _cineClubContext.Views
+            return _cineClubContext.Views
                 .Include(v => v.Movie)
                 .Where(v => v.UserId == userId)
-                .ToListAsync();
+                .ToList();
         }
 
-        public override async Task<IEnumerable<View>> GetAllAsync()
+        public override IEnumerable<View> GetAll()
         {
-            return await _dbSet
+            return _dbSet
                 .Include(v => v.User)
                 .Include(v => v.Movie)
-                .ToListAsync();
+                .ToList();
         }
 
-        public override async Task<View?> GetByIdAsync(int id)
+        public override View? GetById(int id)
         {
-            return await _dbSet
+            return _dbSet
                 .Include(v => v.User)
                 .Include(v => v.Movie)
-                .FirstOrDefaultAsync(v => v.Id == id);
+                .FirstOrDefault(v => v.Id == id);
         }
     }
 }

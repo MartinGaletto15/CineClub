@@ -4,6 +4,6 @@ namespace Domain.Interfaces
 {
     public interface IViewRepository : IGenericRepository<View>
     {
-        Task<IEnumerable<View>> GetViewsByUserIdAsync(int userId);
+        IEnumerable<View> GetViewsByUserId(int userId);
     }
 }

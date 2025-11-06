@@ -5,12 +5,10 @@ namespace Application.Interfaces
 {
     public interface IMovieService
     {
-        Task<IEnumerable<MovieDto>> GetAllMoviesAsync();
-        Task<MovieDto> GetMovieByIdAsync(int id);
-        Task<MovieDto> CreateMovieAsync(CreateMovieRequest createRequest);
-        
-        Task<MovieDto> UpdateMovieAsync(int id, UpdateMovieRequest updateRequest);
-        
-        Task DeleteMovieAsync(int id);
+        IEnumerable<MovieDto> GetAllMovies();
+        MovieDto GetMovieById(int id);
+        MovieDto CreateMovie(CreateMovieRequest createRequest);
+        MovieDto UpdateMovie(int id, UpdateMovieRequest updateRequest);
+        void DeleteMovie(int id);
     }
 }

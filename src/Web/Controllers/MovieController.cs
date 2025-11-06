@@ -3,7 +3,7 @@ using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Dtos;
 using Domain.Exceptions;
-using System.Timers;
+using System.Timers; // Nota: Este 'using' parece no usarse y podría borrarse
 using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
@@ -21,49 +21,51 @@ namespace Web.Controllers
             _movieExternalService = movieExternalService;
         }
 
-        //VER UNA PELÍCULA (requiere estar autenticado)
+        //VER UNA PELÍCULA (no requiere estar autenticado)
         [HttpGet("{id}")]
-        public async Task<ActionResult<MovieDto>> GetMovieById([FromRoute] int id)
+        public ActionResult<MovieDto> GetMovieById([FromRoute] int id)
         {
-            var movie = await _movieService.GetMovieByIdAsync(id);
+            var movie = _movieService.GetMovieById(id);
             return Ok(movie);
         }
 
-        //LISTAR PELÍCULAS (requiere estar autenticado)
+        //LISTAR PELÍCULAS (no requiere estar autenticado)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDto>>> GetAllMovies()
+        public ActionResult<IEnumerable<MovieDto>> GetAllMovies()
         {
-            var movies = await _movieService.GetAllMoviesAsync();
+            var movies = _movieService.GetAllMovies();
             return Ok(movies);
         }
 
         //CREAR PELÍCULAS - SOLO Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
-        public async Task<ActionResult<MovieDto>> CreateMovie([FromBody] CreateMovieRequest createMovieDto)
+        public ActionResult<MovieDto> CreateMovie([FromBody] CreateMovieRequest createMovieDto)
         {
-            var movieDto = await _movieService.CreateMovieAsync(createMovieDto);
+            var movieDto = _movieService.CreateMovie(createMovieDto);
+            // Asegúrate de que tu MovieDto tenga una propiedad 'id' (en minúscula).
             return CreatedAtAction(nameof(GetMovieById), new { id = movieDto.id }, movieDto);
         }
 
         //ACTUALIZAR - SOLO Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<MovieDto>> UpdateMovie([FromRoute] int id, [FromBody] UpdateMovieRequest updateMovieDto)
+        public ActionResult<MovieDto> UpdateMovie([FromRoute] int id, [FromBody] UpdateMovieRequest updateMovieDto)
         {
-            var movie = await _movieService.UpdateMovieAsync(id, updateMovieDto);
+            var movie = _movieService.UpdateMovie(id, updateMovieDto);
             return Ok(movie);
         }
 
         //ELIMINAR - SOLO SuperAdmin
         [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMovie([FromRoute] int id)
+        public ActionResult DeleteMovie([FromRoute] int id)
         {
-            await _movieService.DeleteMovieAsync(id);
+            _movieService.DeleteMovie(id);
             return NoContent();
         }
 
+        //LLAMADA A API EXTERNA
         [HttpGet("Find")]
         public async Task<IActionResult> FindMovie([FromQuery] string? title)
         {
@@ -71,9 +73,9 @@ namespace Web.Controllers
             {
                 throw new AppValidationException("El titulo es obligatorio");
             }
+            // Mantenemos await porque _movieExternalService es asíncrono
             var movie = await _movieExternalService.SearchMovieAsync(title);
             return movie is null ? NotFound("No se encontró la película") : Ok(movie);
         }
-
     }
 }

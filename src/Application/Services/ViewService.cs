@@ -20,43 +20,42 @@ namespace Application.Services
             _movieRepository = movieRepository;
         }
 
-        public async Task<IEnumerable<ViewDto>> GetAllAsync()
+        public IEnumerable<ViewDto> GetAll()
         {
-            var views = await _viewRepository.GetAllAsync();
+            var views = _viewRepository.GetAll();
             return ViewDto.Create(views);
         }
 
-        public async Task<ViewDto> GetByIdAsync(int id)
+        public ViewDto GetById(int id)
         {
-            var view = await _viewRepository.GetByIdAsync(id)
+            var view = _viewRepository.GetById(id)
                 ?? throw new AppValidationException("Id de vista no encontrada");
 
             return ViewDto.Create(view);
         }
         
-        public async Task<IEnumerable<ViewDto>> GetByUserIdAsync(int userId)
+        public IEnumerable<ViewDto> GetByUserId(int userId)
         {
-            var userExists = await _userRepository.GetByIdAsync(userId);
+            var userExists = _userRepository.GetById(userId);
             if (userExists == null)
             {
                 throw new AppValidationException($"El Usuario con ID {userId} no existe.");
             }
 
-            var views = await _viewRepository.GetViewsByUserIdAsync(userId);
+            var views = _viewRepository.GetViewsByUserId(userId);
 
             return ViewDto.Create(views);
         }
 
-        public async Task<ViewDto> CreateAsync(CreateViewRequest dto)
+        public ViewDto Create(CreateViewRequest dto)
         {
-
-            var userExists = await _userRepository.GetByIdAsync(dto.UserId);
+            var userExists = _userRepository.GetById(dto.UserId);
             if (userExists == null)
             {
                 throw new AppValidationException($"El Usuario con ID {dto.UserId} no existe.");
             }
 
-            var movieExists = await _movieRepository.GetByIdAsync(dto.MovieId);
+            var movieExists = _movieRepository.GetById(dto.MovieId);
             if (movieExists == null)
             {
                 throw new AppValidationException($"La Película con ID {dto.MovieId} no existe.");
@@ -74,18 +73,18 @@ namespace Application.Services
                 DateFinish = dto.DateFinish
             };
 
-            await _viewRepository.AddAsync(view);
+            _viewRepository.Add(view);
             return ViewDto.Create(view);
         }
 
-        public async Task<ViewDto> UpdateAsync(int id, UpdateViewRequest dto)
+        public ViewDto Update(int id, UpdateViewRequest dto)
         {
-            var view = await _viewRepository.GetByIdAsync(id)
-                     ?? throw new AppValidationException("ID de vista no encontrada");
+            var view = _viewRepository.GetById(id)
+                         ?? throw new AppValidationException("ID de vista no encontrada");
 
             if (dto.MovieId.HasValue)
             {
-                var movieExists = await _movieRepository.GetByIdAsync(dto.MovieId.Value);
+                var movieExists = _movieRepository.GetById(dto.MovieId.Value);
 
                 if (movieExists == null)
                 {
@@ -102,14 +101,15 @@ namespace Application.Services
             view.Rating = dto.Rating ?? view.Rating;
             view.DateFinish = dto.DateFinish ?? view.DateFinish;
 
-            await _viewRepository.UpdateAsync(view);
+            _viewRepository.Update(view);
             return ViewDto.Create(view);
         }
 
-        public async Task DeleteAsync(int id)
+        public void Delete(int id)
         {
-            await GetByIdAsync(id);
-            await _viewRepository.DeleteAsync(id);
+            // Verificamos que existe
+            GetById(id);
+            _viewRepository.Delete(id);
         }
     }
 }

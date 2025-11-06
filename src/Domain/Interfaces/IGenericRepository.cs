@@ -4,11 +4,11 @@ namespace Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T?> GetByIdAsync(int id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(int id);
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> GetAll();
+        T? GetById(int id); // Dejamos T? para permitir que devuelva null
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(int id);
+        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
     }
-} 
+}

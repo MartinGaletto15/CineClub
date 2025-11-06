@@ -19,19 +19,18 @@ namespace Web.Controllers
         //LOGIN (PÚBLICO)
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginRequest request)
+        public IActionResult Login(UserLoginRequest request)
         {
-            var token = await _service.LoginAsync(request);
+            var token = _service.Login(request);
             return Ok(new { Token = token });
         }
 
         //REGISTRO PÚBLICO (ROL FIJO = USER)
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register(CreateUserRequest request)
+        public IActionResult Register(CreateUserRequest request)
         {
-            
-            var user = await _service.CreateAsync(request);
+            var user = _service.Create(request);
             return Ok(user);
         }
     }

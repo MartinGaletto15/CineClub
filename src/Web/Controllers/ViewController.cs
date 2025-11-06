@@ -6,15 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Domain.Exceptions;
 
-namespace WebAPI.Controllers
+namespace Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class ViewController : ControllerBase
     {
         private readonly IViewService _viewService;
-        // No necesitas IUserService si solo vas a verificar permisos
-        // private readonly IUserService _UserService; 
 
         public ViewController(IViewService viewService)
         {
@@ -24,27 +22,25 @@ namespace WebAPI.Controllers
         //VER TODAS LAS VISUALIZACIONES - SOLO ADMIN / SUPERADMIN
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            var result = await _viewService.GetAllAsync();
+            var result = _viewService.GetAll();
             return Ok(result);
         }
 
         //BUSCAR UNA VISUALIZACION (POR SU ID DE VISTA) - SOLO ADMIN / SUPERADMIN
-        // NOTA: Cambié el nombre del método a GetById para que sea claro
-        // y no entre en conflicto con el otro método.
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var result = await _viewService.GetByIdAsync(id);
+            var result = _viewService.GetById(id);
             return Ok(result);
         }
 
         //BUSCAR TODAS LAS VISTAS ASOCIADAS A UN USUARIO PARTICULAR - CUALQUIER USUARIO
         [Authorize]
         [HttpGet("User/{userId}")]
-        public async Task<IActionResult> GetViewsByUserId(int userId)
+        public IActionResult GetViewsByUserId(int userId)
         {
             // Obtener el ID del usuario que hace la llamada
             var loggedInUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -62,41 +58,41 @@ namespace WebAPI.Controllers
                     new { message = "No tienes permisos para ver las visualizaciones de otro usuario." });
             }
             
-            var result = await _viewService.GetByUserIdAsync(userId);
+            var result = _viewService.GetByUserId(userId);
             return Ok(result);
         }
 
         //REGISTRAR VISUALIZACIÓN - CUALQUIER USUARIO LOGUEADO
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateViewRequest dto)
+        public IActionResult Create(CreateViewRequest dto)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!int.TryParse(userIdClaim, out var userId))
                 return Unauthorized("No se pudo identificar al usuario autenticado.");
 
-            dto.UserId = userId;
+            dto.UserId = userId; // Asignamos el ID del usuario logueado al DTO
 
-            var result = await _viewService.CreateAsync(dto);
+            var result = _viewService.Create(dto);
             return Ok(result);
         }
 
         //EDITAR VISUALIZACIÓN - SOLO ADMIN / SUPERADMIN
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateViewRequest dto)
+        public IActionResult Update(int id, UpdateViewRequest dto)
         {
-            var result = await _viewService.UpdateAsync(id, dto);
+            var result = _viewService.Update(id, dto);
             return Ok(result);
         }
 
         //ELIMINAR VISUALIZACIÓN - SOLO SUPERADMIN
         [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            await _viewService.DeleteAsync(id);
+            _viewService.Delete(id);
             return NoContent();
         }
     }

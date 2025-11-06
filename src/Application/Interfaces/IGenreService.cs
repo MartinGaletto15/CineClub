@@ -5,10 +5,10 @@ namespace Application.Interfaces
 {
     public interface IGenreService
     {
-        Task<IEnumerable<GenreDto>> GetAllGenresAsync();
-        Task<GenreDto> GetGenreByIdAsync(int id);
-        Task<GenreDto> CreateGenreAsync(CreateGenreRequest createRequest);
-        Task<GenreDto> UpdateGenreAsync(int id, UpdateGenreRequest updateRequest);
-        Task DeleteGenreAsync(int id);
+        IEnumerable<GenreDto> GetAllGenres();
+        GenreDto GetGenreById(int id);
+        GenreDto CreateGenre(CreateGenreRequest createRequest);
+        GenreDto UpdateGenre(int id, UpdateGenreRequest updateRequest);
+        void DeleteGenre(int id);
     }
 }

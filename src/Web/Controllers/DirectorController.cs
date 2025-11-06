@@ -19,44 +19,44 @@ namespace Web.Controllers
 
         //VER UN DIRECTOR - Cualquier usuario autenticado
         [HttpGet("{id}")]
-        public async Task<ActionResult<DirectorDto>> GetDirectorById([FromRoute] int id)
+        public ActionResult<DirectorDto> GetDirectorById([FromRoute] int id)
         {
-            var director = await _directorService.GetDirectorByIdAsync(id);
+            var director = _directorService.GetDirectorById(id);
             return Ok(director);
         }
 
         //LISTAR DIRECTORES - Cualquier persona
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DirectorDto>>> GetAllDirectors()
+        public ActionResult<IEnumerable<DirectorDto>> GetAllDirectors()
         {
-            var directors = await _directorService.GetAllDirectorsAsync();
+            var directors = _directorService.GetAllDirectors();
             return Ok(directors);
         }
 
         //CREAR - Solo Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
-        public async Task<ActionResult<DirectorDto>> CreateDirector([FromBody] CreateDirectorRequest createDirectorDto)
+        public ActionResult<DirectorDto> CreateDirector([FromBody] CreateDirectorRequest createDirectorDto)
         {
-            var directorDto = await _directorService.CreateDirectorAsync(createDirectorDto);
+            var directorDto = _directorService.CreateDirector(createDirectorDto);
             return CreatedAtAction(nameof(GetDirectorById), new { id = directorDto.id }, directorDto);
         }
 
         //EDITAR - Solo Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<DirectorDto>> UpdateDirector([FromRoute] int id, [FromBody] UpdateDirectorRequest updateDirectorDto)
+        public ActionResult<DirectorDto> UpdateDirector([FromRoute] int id, [FromBody] UpdateDirectorRequest updateDirectorDto)
         {
-            var director = await _directorService.UpdateDirectorAsync(id, updateDirectorDto);
+            var director = _directorService.UpdateDirector(id, updateDirectorDto);
             return Ok(director);
         }
 
         //ELIMINAR - Solo SuperAdmin
         [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteDirector([FromRoute] int id)
+        public ActionResult DeleteDirector([FromRoute] int id)
         {
-            await _directorService.DeleteDirectorAsync(id);
+            _directorService.DeleteDirector(id);
             return NoContent();
         }
     }

@@ -12,20 +12,20 @@ namespace Infrastructure.Persistence.Repositories
             // inicializar _context y _dbSet
         }
 
-        public override async Task<IEnumerable<Movie>> GetAllAsync()
+        public override IEnumerable<Movie> GetAll()
         {
-            return await _dbSet
+            return _dbSet
                 .Include(m => m.Director)
                 .Include(m => m.Genres)
-                .ToListAsync();
+                .ToList();
         }
 
-        public override async Task<Movie?> GetByIdAsync(int id)
+        public override Movie? GetById(int id)
         {
-            return await _dbSet
+            return _dbSet
                 .Include(m => m.Director)
                 .Include(m => m.Genres)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefault(m => m.Id == id);
         }
 
     }

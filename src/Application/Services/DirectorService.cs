@@ -16,49 +16,50 @@ namespace Application.Services
             _directorRepository = directorRepository;
         }
 
-        public async Task<IEnumerable<DirectorDto>> GetAllDirectorsAsync()
+        public IEnumerable<DirectorDto> GetAllDirectors()
         {
-            var directors = await _directorRepository.GetAllAsync();
+            var directors = _directorRepository.GetAll();
             return directors.Select(DirectorDto.Create);
         }
 
-        public async Task<DirectorDto> GetDirectorByIdAsync(int id)
+        public DirectorDto GetDirectorById(int id)
         {
-            var director = await _directorRepository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Director no encontrado");
+            var director = _directorRepository.GetById(id)
+                           ?? throw new AppValidationException("Director no encontrado");
 
             return DirectorDto.Create(director);
         }
 
-        public async Task<DirectorDto> CreateDirectorAsync(CreateDirectorRequest createRequest)
+        public DirectorDto CreateDirector(CreateDirectorRequest createRequest)
         {
             var director = new Director
             {
                 Name = createRequest.Name
             };
 
-            await _directorRepository.AddAsync(director);
+            _directorRepository.Add(director);
 
             return DirectorDto.Create(director);
         }
 
-        public async Task<DirectorDto> UpdateDirectorAsync(int id, UpdateDirectorRequest updateRequest)
+        public DirectorDto UpdateDirector(int id, UpdateDirectorRequest updateRequest)
         {
-
-            var director = await _directorRepository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Director no encontrado");
+            var director = _directorRepository.GetById(id)
+                           ?? throw new AppValidationException("Director no encontrado");
 
             director.Name = updateRequest.Name;
 
-            await _directorRepository.UpdateAsync(director);
+            _directorRepository.Update(director);
 
             return DirectorDto.Create(director);
         }
 
-        public async Task DeleteDirectorAsync(int id)
+        public void DeleteDirector(int id)
         {
-            await GetDirectorByIdAsync(id);
-            await _directorRepository.DeleteAsync(id);
+            // Esta llamada verifica que el director existe (y lanza excepción si no)
+            GetDirectorById(id); 
+            
+            _directorRepository.Delete(id);
         }
     }
 }

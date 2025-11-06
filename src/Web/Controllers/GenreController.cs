@@ -20,44 +20,44 @@ namespace Web.Controllers
         //LISTAR Y OBTENER — Cualquier usuario autenticado
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<GenreDto>> GetGenreById([FromRoute] int id)
+        public ActionResult<GenreDto> GetGenreById([FromRoute] int id)
         {
-            var genre = await _genreService.GetGenreByIdAsync(id);
+            var genre = _genreService.GetGenreById(id);
             return Ok(genre);
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenreDto>>> GetAllGenres()
+        public ActionResult<IEnumerable<GenreDto>> GetAllGenres()
         {
-            var genres = await _genreService.GetAllGenresAsync();
+            var genres = _genreService.GetAllGenres();
             return Ok(genres);
         }
 
         //CREAR — Solo Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
-        public async Task<ActionResult<GenreDto>> CreateGenre([FromBody] CreateGenreRequest createGenreDto)
+        public ActionResult<GenreDto> CreateGenre([FromBody] CreateGenreRequest createGenreDto)
         {
-            var genreDto = await _genreService.CreateGenreAsync(createGenreDto);
+            var genreDto = _genreService.CreateGenre(createGenreDto);
             return CreatedAtAction(nameof(GetGenreById), new { id = genreDto.id }, genreDto);
         }
 
         //MODIFICAR — Solo Admin o SuperAdmin
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<GenreDto>> UpdateGenre([FromRoute] int id, [FromBody] UpdateGenreRequest updateGenreDto)
+        public ActionResult<GenreDto> UpdateGenre([FromRoute] int id, [FromBody] UpdateGenreRequest updateGenreDto)
         {
-            var genre = await _genreService.UpdateGenreAsync(id, updateGenreDto);
+            var genre = _genreService.UpdateGenre(id, updateGenreDto);
             return Ok(genre);
         }
 
         //ELIMINAR — Solo SuperAdmin
         [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteGenre([FromRoute] int id)
+        public ActionResult DeleteGenre([FromRoute] int id)
         {
-            await _genreService.DeleteGenreAsync(id);
+            _genreService.DeleteGenre(id);
             return NoContent();
         }
     }

@@ -16,49 +16,50 @@ namespace Application.Services
             _genreRepository = genreRepository;
         }
 
-        public async Task<IEnumerable<GenreDto>> GetAllGenresAsync()
+        public IEnumerable<GenreDto> GetAllGenres()
         {
-            var genres = await _genreRepository.GetAllAsync();
+            var genres = _genreRepository.GetAll();
             return GenreDto.Create(genres);
         }
 
-        public async Task<GenreDto> GetGenreByIdAsync(int id)
+        public GenreDto GetGenreById(int id)
         {
-            var genre = await _genreRepository.GetByIdAsync(id)
+            var genre = _genreRepository.GetById(id)
                 ?? throw new AppValidationException("Género no encontrado");
 
             return GenreDto.Create(genre);
         }
 
-        public async Task<GenreDto> CreateGenreAsync(CreateGenreRequest createRequest)
+        public GenreDto CreateGenre(CreateGenreRequest createRequest)
         {
             var genre = new Genre
             {
                 Name = createRequest.Name
             };
 
-            await _genreRepository.AddAsync(genre);
+            _genreRepository.Add(genre);
 
             return GenreDto.Create(genre);
         }
 
-        public async Task<GenreDto> UpdateGenreAsync(int id, UpdateGenreRequest updateRequest)
+        public GenreDto UpdateGenre(int id, UpdateGenreRequest updateRequest)
         {
 
-            var genre = await _genreRepository.GetByIdAsync(id)
+            var genre = _genreRepository.GetById(id)
                 ?? throw new AppValidationException("Género no encontrado");
 
             genre.Name = updateRequest.Name;
 
-            await _genreRepository.UpdateAsync(genre);
+            _genreRepository.Update(genre);
 
             return GenreDto.Create(genre);
         }
 
-        public async Task DeleteGenreAsync(int id)
+        public void DeleteGenre(int id)
         {
-            await GetGenreByIdAsync(id);
-            await _genreRepository.DeleteAsync(id);
+            // Verificamos que existe antes de borrar
+            GetGenreById(id);
+            _genreRepository.Delete(id);
         }
     }
 }

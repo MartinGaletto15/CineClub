@@ -20,17 +20,17 @@ namespace Application.Services
             _directorRepository = directorRepository;
         }
 
-        public async Task<MovieDto> GetMovieByIdAsync(int id)
+        public MovieDto GetMovieById(int id)
         {
-            var movie = await _MovieRepository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Pelicula no encontrada");
+            var movie = _MovieRepository.GetById(id)
+                           ?? throw new AppValidationException("Pelicula no encontrada");
 
             return MovieDto.Create(movie);
         }
 
-        public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
+        public IEnumerable<MovieDto> GetAllMovies()
         {
-            var movies = await _MovieRepository.GetAllAsync();
+            var movies = _MovieRepository.GetAll();
             if (movies == null || !movies.Any())
             {
                 return new List<MovieDto>();
@@ -38,10 +38,9 @@ namespace Application.Services
             return MovieDto.Create(movies);
         }
 
-        public async Task<MovieDto> CreateMovieAsync(CreateMovieRequest createRequest)
+        public MovieDto CreateMovie(CreateMovieRequest createRequest)
         {
-
-            var director = await _directorRepository.GetByIdAsync(createRequest.DirectorId);
+            var director = _directorRepository.GetById(createRequest.DirectorId);
             if (director == null)
             {
                 throw new AppValidationException($"El Director con ID {createRequest.DirectorId} no existe.");
@@ -55,30 +54,30 @@ namespace Application.Services
                 Duration = createRequest.Duration,
                 Synopsis = createRequest.Synopsis,
                 Poster = createRequest.Poster
-                // La propiedad movie.Genres se inicializa como una lista vacía
             };
 
             // Logica M:N
             if (createRequest.GenreIds != null && createRequest.GenreIds.Any())
             {
                 // Buscamos las entidades Genre que coincidan con los IDs
-                var genres = await _genreRepository.FindAsync(g => createRequest.GenreIds.Contains(g.Id));
+                var genres = _genreRepository.Find(g => createRequest.GenreIds.Contains(g.Id));
 
                 // Asignamos las entidades a la navegación
                 movie.Genres = genres.ToList();
             }
 
-            await _MovieRepository.AddAsync(movie);
+            _MovieRepository.Add(movie);
 
-            var movieWithRelations = await _MovieRepository.GetByIdAsync(movie.Id);
+            // Recargamos la entidad para que incluya las relaciones (Director y Genres)
+            var movieWithRelations = _MovieRepository.GetById(movie.Id);
 
             return MovieDto.Create(movieWithRelations!);
         }
 
-        public async Task<MovieDto> UpdateMovieAsync(int id, UpdateMovieRequest updateRequest)
+        public MovieDto UpdateMovie(int id, UpdateMovieRequest updateRequest)
         {
-            var movie = await _MovieRepository.GetByIdAsync(id)
-                    ?? throw new AppValidationException("Pelicula no encontrada");
+            var movie = _MovieRepository.GetById(id)
+                           ?? throw new AppValidationException("Pelicula no encontrada");
 
             movie.Title = updateRequest.Title ?? movie.Title;
             movie.DirectorId = updateRequest.DirectorId ?? movie.DirectorId;
@@ -90,10 +89,10 @@ namespace Application.Services
             // Lógica M:N
             if (updateRequest.GenreIds != null)
             {
-                var newGenres = await _genreRepository.FindAsync(g => updateRequest.GenreIds.Contains(g.Id));
-
+                var newGenres = _genreRepository.Find(g => updateRequest.GenreIds.Contains(g.Id));
+                
                 var requestedIdsCount = updateRequest.GenreIds.Distinct().Count();
-
+                
                 if (newGenres.Count() != requestedIdsCount)
                 {
                     throw new AppValidationException($"Uno o mas generos no validos");
@@ -102,17 +101,18 @@ namespace Application.Services
                 movie.Genres = newGenres.ToList();
             }
 
-            await _MovieRepository.UpdateAsync(movie);
+            _MovieRepository.Update(movie);
 
-            var movieActualizada = await _MovieRepository.GetByIdAsync(id);
+            var movieActualizada = _MovieRepository.GetById(id);
 
             return MovieDto.Create(movieActualizada!);
         }
 
-        public async Task DeleteMovieAsync(int id)
+        public void DeleteMovie(int id)
         {
-            await GetMovieByIdAsync(id);
-            await _MovieRepository.DeleteAsync(id);
+            // Verificamos que existe
+            GetMovieById(id);
+            _MovieRepository.Delete(id);
         }
     }
 }

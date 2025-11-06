@@ -15,44 +15,41 @@ namespace Infrastructure.Persistence.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual IEnumerable<T> GetAll()
         {
-            return await _dbSet.ToListAsync();
+            return _dbSet.ToList();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id)
+        public virtual T? GetById(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return _dbSet.Find(id);
         }
 
-        public virtual async Task AddAsync(T entity)
+        public virtual void Add(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            _dbSet.Add(entity);
+            _context.SaveChanges();
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public virtual void Update(T entity)
         {
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public virtual async Task DeleteAsync(int id)
+        public virtual void Delete(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = GetById(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
         }
 
-        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return _dbSet.Where(predicate).ToList();
         }
     }
 }
-
-
-//Esta es la clase genérica que van a heredar todos tus repositorios específicos (como ViewRepository). KEVIN 
