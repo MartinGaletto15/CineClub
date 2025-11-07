@@ -24,5 +24,7 @@ namespace Domain.Entities
 
         [Required]
         public UserRole Role { get; set; }
+
+        public virtual ICollection<View> Views { get; set; } = new List<View>();
     }
 }

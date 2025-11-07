@@ -18,6 +18,18 @@ namespace Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+            .HasMany(u => u.Views)
+            .WithOne(v => v.User)
+            .HasForeignKey(v => v.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Movie>()
+            .HasMany(m => m.Views)
+            .WithOne(v => v.Movie)
+            .HasForeignKey(v => v.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

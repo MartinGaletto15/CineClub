@@ -26,4 +26,6 @@ public class Movie
     public string? Poster { get; set; }
 
     public ICollection<Genre> Genres { get; set; } = new List<Genre>();
+
+    public virtual ICollection<View> Views { get; set; } = new List<View>();
 }
