@@ -46,7 +46,6 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 ┗ 📂 Web → Controladores, Middlewares, Swagger, JWT
 
 
-
 ---
 
 ## 🛠️ Tecnologías Utilizadas
@@ -75,19 +74,9 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 | Autenticación JWT funcional | ✅ |
 | Inclusión de roles en el token | ✅ |
 | Protección de endpoints `[Authorize]` | ✅ |
-
----
-
-## ⏳ Requisitos Restantes para Aprobación Directa
-
-| Requisito | Estado | Detalle |
-|-----------|:------:|---------|
-| Variable de entorno para el JWT Secret en Azure |
-| Migración a SQL Server en Azure 
-| CI/CD con GitHub Actions
-| Consumo de API externa (OMDB) con HttpClientFactory 
-
----
+| Migración a SQL Server en Azure | ✅ |
+| CI/CD con GitHub Actions | ✅ |
+| Consumo de API externa (OMDB) con HttpClientFactory | ✅ |
 
 ## 🔐 Autenticación JWT
 
@@ -124,7 +113,13 @@ Authorize → Bearer eyJhbGciOi...
 | GET    | `/api/User`       | (Protegido): Lista usuarios |
 
 🚀 Ejecución En La Nube SQL Azure
+
 https://cineclub-dev.azurewebsites.net/swagger/
+
+🚀 Conexion a Base de Datos (SQL SERVER MANGMENT STUDIO 21)
+
+A traves de String Connection brindado por Cadenas de conexión desde Panel De BDD Azure: ADO.NET (autenticación de SQL)
+Se puede encontrar desde el codigo en appsettings.json en linea 9  "DefaultConnection" 
 
 🚀 Ejecución Local
 
