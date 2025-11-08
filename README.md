@@ -82,9 +82,9 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 
 | Requisito | Estado | Detalle |
 |-----------|:------:|---------|
-| Variable de entorno para el JWT Secret en Azure |  | Se realiza durante el deploy |
-| Migración a SQL Server en Azure |  | Se realiza antes de deploy |
-| CI/CD con GitHub Actions |  | Configura automatización de deploy |
+| Variable de entorno para el JWT Secret en Azure |
+| Migración a SQL Server en Azure 
+| CI/CD con GitHub Actions
 | Consumo de API externa (OMDB) con HttpClientFactory 
 
 ---
@@ -122,6 +122,9 @@ Authorize → Bearer eyJhbGciOi...
 | GET    | `/api/Director`   | Lista directores            |
 | POST   | `/api/User/Login` | Obtiene JWT                 |
 | GET    | `/api/User`       | (Protegido): Lista usuarios |
+
+🚀 Ejecución En La Nube SQL Azure
+https://cineclub-dev.azurewebsites.net/swagger/
 
 🚀 Ejecución Local
 
