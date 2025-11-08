@@ -55,13 +55,12 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 |-----------|-----|
 | **.NET 8 Web API** | Backend principal |
 | **Entity Framework Core** | ORM y acceso a datos |
-| **SQLite** → Local | Base de datos de desarrollo |
-| **SQL Server (⏳)** → Producción | Base de datos final en Azure |
+| **SQLite**| Base de datos de desarrollo |
+| **SQL Server** | Base de datos final en Azure |
 | **JWT Authentication** | Inicio de sesión y autorización por roles |
 | **Swagger / OpenAPI** | Testing y documentación |
-| **Azure App Service (⏳)** | Host final de la API |
-| **Azure Key Vault (⏳)** | Almacenamiento seguro de secretos |
-| **HttpClientFactory (⏳)** | Consumo de API externa (TMDB) |
+| **Azure App Service** | Host final de la API |
+| **HttpClientFactory** | Consumo de API externa (TMDB) |
 
 ---
 
@@ -83,10 +82,10 @@ El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabi
 
 | Requisito | Estado | Detalle |
 |-----------|:------:|---------|
-| Variable de entorno para el JWT Secret en Azure | ⏳ | Se realiza durante el deploy |
-| Migración a SQL Server en Azure | ⏳ | Se realiza antes de deploy |
-| CI/CD con GitHub Actions | ⏳ | Configura automatización de deploy |
-| Consumo de API externa (TMDB) con HttpClientFactory | ⏳ | Próximo paso |
+| Variable de entorno para el JWT Secret en Azure |  | Se realiza durante el deploy |
+| Migración a SQL Server en Azure |  | Se realiza antes de deploy |
+| CI/CD con GitHub Actions |  | Configura automatización de deploy |
+| Consumo de API externa (OMDB) con HttpClientFactory 
 
 ---
 
