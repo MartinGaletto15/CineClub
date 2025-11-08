@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - cineclub-api-dev
+name: Build and deploy ASP.Net Core app to Azure Web App - CineClub-Dev
 
 on:
   push:
@@ -49,7 +49,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'cineclub-api-dev'
+          app-name: 'CineClub-Dev'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_90C0E7CC6A7A4DD6A3B40970D2F7B286 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0DB2C5370A2449BA95A1192CABE8E2AE }}
