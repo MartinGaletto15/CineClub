@@ -17,6 +17,7 @@ namespace Infrastructure.Persistence.Repositories
             return _dbSet
                 .Include(m => m.Director)
                 .Include(m => m.Genres)
+                .Include(m => m.Views)
                 .ToList();
         }
 

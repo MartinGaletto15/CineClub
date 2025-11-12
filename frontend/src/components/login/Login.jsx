@@ -34,12 +34,12 @@ const Login = () => {
 
             const data = decodeTokenHelper(tokenString);
 
-            const { name, lastName, avatar, email, role } = data;
+            const { name, lastName, avatar, email, role, id } = data;
 
-            handleUserLogin(tokenString, name, lastName, avatar, email, role);
+            handleUserLogin(tokenString, name, lastName, avatar, email, role, id);
 
             successToast("Inicio de sesión exitoso");
-            navigate("/");
+            navigate("/home");
 
         } catch (error) {
             errorToast(error.message);

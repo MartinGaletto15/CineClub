@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MovieSection from "../movieSection/MovieSection";
-import { getMovies } from "./LandingServices";
+import { getMovies } from "./landingServices";
 import { useNavigate } from "react-router-dom";
 
 const Landing = () => {

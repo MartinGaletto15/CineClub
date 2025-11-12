@@ -43,7 +43,7 @@ namespace Web.Controllers
         public IActionResult GetViewsByUserId(int userId)
         {
             // Obtener el ID del usuario que hace la llamada
-            var loggedInUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var loggedInUserIdClaim = User.FindFirstValue("id");
             if (!int.TryParse(loggedInUserIdClaim, out var loggedInUserId))
             {
                 throw new AppValidationException("No se pudo identificar al usuario autenticado.");
@@ -67,7 +67,7 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateViewRequest dto)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirstValue("id");
 
             if (!int.TryParse(userIdClaim, out var userId))
                 return Unauthorized("No se pudo identificar al usuario autenticado.");

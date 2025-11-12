@@ -10,14 +10,16 @@ export const AuthContextProvider = ({ children }) => {
     const [avatar, setAvatar] = useState(() => localStorage.getItem("avatar"));
     const [email, setEmail] = useState(() => localStorage.getItem("email"));
     const [role, setRole] = useState(() => localStorage.getItem("role"));
+    const [id, setId] = useState(() => localStorage.getItem("id"));
     const [token, setToken] = useState(() => localStorage.getItem("token"));
 
-    const handleUserLogin = useCallback((token, name, lastName, avatar, email, role) => {
+    const handleUserLogin = useCallback((token, name, lastName, avatar, email, role, id) => {
         localStorage.setItem("name", name);
         localStorage.setItem("lastName", lastName);
         localStorage.setItem("avatar", avatar);
         localStorage.setItem("email", email);
         localStorage.setItem("role", role);
+        localStorage.setItem("id", id);
         localStorage.setItem("token", token);
 
         setName(name);
@@ -25,6 +27,7 @@ export const AuthContextProvider = ({ children }) => {
         setAvatar(avatar);
         setEmail(email);
         setRole(role);
+        setId(id);
         setToken(token);
     }, []);
 
@@ -34,6 +37,7 @@ export const AuthContextProvider = ({ children }) => {
         localStorage.removeItem("avatar");
         localStorage.removeItem("email");
         localStorage.removeItem("role");
+        localStorage.removeItem("id");
         localStorage.removeItem("token");
 
         setName(null);
@@ -41,6 +45,7 @@ export const AuthContextProvider = ({ children }) => {
         setAvatar(null);
         setEmail(null);
         setRole(null);
+        setId(null);
         setToken(null);
     }, []);
 
@@ -106,6 +111,7 @@ export const AuthContextProvider = ({ children }) => {
             avatar,
             role,
             token,
+            id,
             email,
             updateAvatar,
             updateRole,

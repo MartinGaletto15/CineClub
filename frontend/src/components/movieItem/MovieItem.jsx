@@ -1,7 +1,11 @@
 
-function MovieItem({ movie }) {
+function MovieItem({ movie, onClick }) { 
     return (
-        <div key={movie.id} className="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
+        <div 
+            key={movie.id} 
+            className="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            onClick={onClick}
+        >
             <img
                 src={movie.poster}
                 alt={movie.title}

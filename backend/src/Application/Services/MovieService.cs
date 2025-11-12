@@ -88,9 +88,9 @@ namespace Application.Services
             if (updateRequest.GenreIds != null)
             {
                 var newGenres = _genreRepository.Find(g => updateRequest.GenreIds.Contains(g.Id));
-                
+
                 var requestedIdsCount = updateRequest.GenreIds.Distinct().Count();
-                
+
                 if (newGenres.Count() != requestedIdsCount)
                 {
                     throw new AppValidationException($"Uno o mas generos no validos");
@@ -104,6 +104,23 @@ namespace Application.Services
             var movieActualizada = _MovieRepository.GetById(id);
 
             return MovieDto.Create(movieActualizada!);
+        }
+
+        public IEnumerable<MovieDto> GetPopularMovies()
+        {
+            var movies = _MovieRepository.GetAll();
+            if (movies == null || !movies.Any())
+            {
+                return new List<MovieDto>();
+            }
+
+            var popular = movies
+                .OrderByDescending(m => (m.Views != null) ? m.Views.Count : 0) // Ordena por cantidad de visualizaciones
+                .ThenByDescending(m => m.ReleaseDate) // como criterio secundario usa la fecha de lanzamiento
+                .Take(10)
+                .ToList();
+
+            return MovieDto.Create(popular);
         }
 
         public void DeleteMovie(int id)

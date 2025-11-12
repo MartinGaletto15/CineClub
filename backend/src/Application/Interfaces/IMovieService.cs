@@ -8,6 +8,7 @@ namespace Application.Interfaces
         IEnumerable<MovieDto> GetAllMovies();
         MovieDto GetMovieById(int id);
         MovieDto CreateMovie(CreateMovieRequest createRequest);
+        IEnumerable<MovieDto> GetPopularMovies();
         MovieDto UpdateMovie(int id, UpdateMovieRequest updateRequest);
         void DeleteMovie(int id);
     }
