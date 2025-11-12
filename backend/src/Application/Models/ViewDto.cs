@@ -7,6 +7,7 @@ namespace Application.Models;
 
 public record ViewDto(
     int Id,
+    int MovieId,
     float? Rating,
     DateOnly? DateFinish,
     string UserName,
@@ -22,14 +23,15 @@ public record ViewDto(
 
         var dto = new ViewDto(
             entity.Id,
+            entity.MovieId,
             entity.Rating,
             entity.DateFinish,
             entity.User.Name,
             entity.Movie.Title,
             entity.Movie.Poster!,
             entity.Movie.Synopsis!,
-            entity.Movie.Genres.Select(g => g.Name).ToList(), 
-            entity.Movie.ReleaseDate.Year 
+            entity.Movie.Genres.Select(g => g.Name).ToList(),
+            entity.Movie.ReleaseDate.Year
         );
 
         return dto;
