@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getWatchList, updateView, removeFromWatchList, addToWatchList, getAllMovies } from './watchListService';
-import { errorToast, successToast, warningToast } from '../notifications/Notifications';
+import {
+  getWatchList,
+  updateView,
+  removeFromWatchList,
+  addToWatchList,
+  getAllMovies
+} from './watchListService';
+
+import {
+  errorToast,
+  successToast,
+  warningToast
+} from '../notifications/Notifications';
+
 import AddMovieModal from './AddMovieModal';
 import EditViewModal from './EditViewModal';
 import WatchListItem from './WatchListItem';
@@ -23,9 +35,7 @@ export default function WatchList() {
   }, []);
 
   useEffect(() => {
-    if (showAddModal) {
-      loadAvailableMovies();
-    }
+    if (showAddModal) loadAvailableMovies();
   }, [showAddModal]);
 
   const loadWatchList = async () => {
@@ -59,7 +69,7 @@ export default function WatchList() {
   const handleAddToWatchList = async (movieData) => {
     try {
       await addToWatchList(movieData);
-      successToast('Película agregada a tu lista', 'success');
+      successToast('Película agregada a tu lista');
       setShowAddModal(false);
       loadWatchList();
     } catch (err) {
@@ -90,21 +100,16 @@ export default function WatchList() {
     const currentView = watchListMovies.find(v => v.id === viewId);
     if (!currentView) return;
 
-    const updatedData = {
-      rating: newRating,
-      dateFinish: currentView.dateFinish 
-    };
-
     try {
-      await updateView(viewId, updatedData);
+      await updateView(viewId, { rating: newRating, dateFinish: currentView.dateFinish });
 
       setWatchListMovies(prev =>
         prev.map(view =>
           view.id === viewId ? { ...view, rating: newRating } : view
         )
       );
-      successToast('Puntuación actualizada');
 
+      successToast('Puntuación actualizada');
     } catch (err) {
       errorToast('Error al actualizar la puntuación');
     }
@@ -114,7 +119,7 @@ export default function WatchList() {
     try {
       await removeFromWatchList(viewId);
       setWatchListMovies(prev => prev.filter(view => view.id !== viewId));
-      successToast('Película eliminada de tu lista', 'success');
+      successToast('Película eliminada de tu lista');
     } catch (err) {
       errorToast('Error al eliminar de la lista');
     }
@@ -125,20 +130,36 @@ export default function WatchList() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white mt-16">
-      {error && <div className="bg-red-600 p-4 mb-4 rounded">{error}</div>}
+    <div className="min-h-screen bg-slate-950 text-white pt-24">
 
-      <div className="container mx-auto px-4 py-12">
+      {error && (
+        <div className="bg-red-600 p-4 mb-4 rounded max-w-3xl mx-auto">
+          {error}
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-6 py-16">
+
+        {/* HEADER */}
         <div className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl font-bold">Mi Lista de Películas</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-xl">
+            Mi Lista de Películas
+          </h1>
+
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-semibold transition"
+            className="
+              bg-red-600 hover:bg-red-700
+              px-6 py-3 rounded-lg font-semibold
+              shadow-lg hover:shadow-xl
+              transition
+            "
           >
-            + Agregar Película
+            + Agregar
           </button>
         </div>
 
+        {/* MODALES */}
         <AddMovieModal
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
@@ -157,12 +178,13 @@ export default function WatchList() {
           onSave={handleSaveEdit}
         />
 
+        {/* CONTENIDO */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
           </div>
         ) : watchListMovies.length > 0 ? (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {watchListMovies.map(view => (
               <WatchListItem
                 key={view.id}
@@ -177,6 +199,7 @@ export default function WatchList() {
         ) : (
           <EmptyWatchList onExploreClick={() => navigate('/movies')} />
         )}
+
       </div>
     </div>
   );

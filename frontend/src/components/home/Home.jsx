@@ -11,8 +11,8 @@ export default function Home() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const loadMovies = await getPopularMovies();
-        setFeaturedMovies(loadMovies);
+        const movies = await getPopularMovies();
+        setFeaturedMovies(movies);
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -27,56 +27,80 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {error && <div className="bg-red-600 p-4 mb-4 rounded">{error}</div>}
+    <div className="min-h-screen bg-slate-950 text-white pt-20">
 
-      {/* Hero Section con Película Destacada */}
+      {error && (
+        <div className="bg-red-600 p-4 mb-4 rounded max-w-3xl mx-auto">
+          {error}
+        </div>
+      )}
+
+      {/* 🎬 HERO SECTION (Optimizada y Profesional) */}
       {featuredMovies.length > 0 && (
-        <section className="relative h-96 bg-red-800 text-white overflow-hidden">
-          {/* Contenedor principal con Flexbox para dividir en dos columnas */}
-          <div className="absolute inset-0 flex">
-            {/* Columna Izquierda: Contenido de Texto */}
-            <div className="w-1/2 bg-gradient-to-r from-black/80 to-black/40 flex flex-col justify-end p-8">
-              <h1 className="text-5xl font-bold mb-4">{featuredMovies[0].title}</h1>
-              <p className="text-lg mb-6 max-w-xl line-clamp-3">{featuredMovies[0].synopsis}</p>
-              <button
-                onClick={() => handleMovieClick(featuredMovies[0].id)}
-                className="bg-red-600 hover:bg-red-700 transition w-fit px-8 py-3 rounded font-semibold"
-              >
-                Ver Detalles
-              </button>
-            </div>
+        <section className="relative w-full h-[60vh] md:h-[75vh] overflow-hidden">
 
-            {/* Columna Derecha: Imagen del Póster */}
-            <div className="w-1/2 relative">
-              <img
-                src={featuredMovies[0].poster}
-                alt={featuredMovies[0].title}
-                className="w-full h-full object-cover"
-              />
-              {/* Opcional: Oscurecer un poco la imagen si el texto se ve mal */}
-              <div className="absolute inset-0 bg-black/30"></div>
-            </div>
+          {/* Imagen del poster (SIEMPRE proporcionada) */}
+          <img
+            src={featuredMovies[0].poster}
+            alt={featuredMovies[0].title}
+            className="
+              absolute inset-0 
+              w-full h-full 
+              object-cover object-center 
+              rounded-none
+              transition-all duration-700
+            "
+          />
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+
+          {/* Contenido */}
+          <div className="relative z-10 max-w-7xl mx-auto h-full flex flex-col justify-center px-6 md:px-12">
+
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-4 drop-shadow-xl">
+              {featuredMovies[0].title}
+            </h1>
+
+            <p className="text-gray-300 text-lg md:text-xl max-w-xl line-clamp-3 mb-6">
+              {featuredMovies[0].synopsis}
+            </p>
+
+            <button
+              onClick={() => handleMovieClick(featuredMovies[0].id)}
+              className="
+                bg-red-600 hover:bg-red-700 
+                transition-all duration-300 
+                text-white font-semibold 
+                py-3 px-6 rounded-lg 
+                shadow-lg hover:scale-[1.05]
+                w-fit
+              "
+            >
+              Ver Detalles
+            </button>
           </div>
         </section>
       )}
 
-      {/* Contenido Principal */}
-      <div className="container mx-auto px-4 py-12">
-        {/* Sección de Bienvenida */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold mb-4">¡Bienvenido a CineClub!</h2>
-          <p className="text-gray-300 text-lg">
-            Descubre miles de películas, crea tu lista personalizada y comparte con otros cinéfilos.
+      {/* 🔽 CONTENIDO PRINCIPAL */}
+      <div className="max-w-7xl mx-auto px-6 py-20">
+
+        {/* Sección bienvenida */}
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">¡Bienvenido a CineClub!</h2>
+          <p className="text-gray-300 text-lg md:text-xl max-w-2xl">
+            Descubre miles de películas, crea tu lista personalizada y compartí tus favoritas.
           </p>
         </div>
 
-        {/* Películas Destacadas */}
+        {/* Películas destacadas */}
         {featuredMovies.length > 1 && (
-          <div className="mb-16">
-            <h3 className="text-2xl font-bold mb-6">Películas Destacadas</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredMovies.slice(1, 4).map(movie => (
+          <div className="mb-24">
+            <h3 className="text-2xl md:text-3xl font-semibold mb-8">Películas Destacadas</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {featuredMovies.slice(1, 5).map(movie => (
                 <MovieItem
                   key={movie.id}
                   movie={movie}
@@ -87,23 +111,35 @@ export default function Home() {
           </div>
         )}
 
-        {/* Acciones Rápidas */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Acciones rápidas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
           <button
             onClick={() => navigate('/movies')}
-            className="bg-gray-800 hover:bg-gray-700 p-6 rounded text-center transition transform hover:scale-105"
+            className="
+              bg-white/5 hover:bg-white/10 
+              p-8 rounded-xl text-left transition-all 
+              border border-white/10 hover:border-white/20 
+              shadow-md hover:shadow-xl
+            "
           >
-            <h4 className="text-xl font-bold mb-2">Peliculas</h4>
-            <p className="text-gray-400">Explora todas las peliculas disponibles</p>
+            <h4 className="text-xl font-semibold mb-2">Películas</h4>
+            <p className="text-gray-400">Explorá todas las películas disponibles.</p>
           </button>
+
           <button
             onClick={() => navigate('/watchlist')}
-            className="bg-gray-800 hover:bg-gray-700 p-6 rounded text-center transition transform hover:scale-105"
+            className="
+              bg-white/5 hover:bg-white/10 
+              p-8 rounded-xl text-left transition-all 
+              border border-white/10 hover:border-white/20 
+              shadow-md hover:shadow-xl
+            "
           >
-            <h4 className="text-xl font-bold mb-2">Mi Lista</h4>
-            <p className="text-gray-400">Ver tus películas guardadas</p>
+            <h4 className="text-xl font-semibold mb-2">Mi Lista</h4>
+            <p className="text-gray-400">Accedé rápido a tus películas guardadas.</p>
           </button>
         </div>
+
       </div>
     </div>
   );
