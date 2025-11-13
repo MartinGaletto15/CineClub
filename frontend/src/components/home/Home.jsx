@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MovieItem from '../movieItem/MovieItem';
-import { getPopularMovies } from './HomeService';
+import { getPopularMovies } from './homeService';
 
 export default function Home() {
   const navigate = useNavigate();
