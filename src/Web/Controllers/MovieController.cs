@@ -63,6 +63,13 @@ namespace Web.Controllers
             return NoContent();
         }
 
+        [HttpGet("popular")]
+        public ActionResult<IEnumerable<MovieDto>> GetPopularMovies()
+        {
+            var movies = _movieService.GetPopularMovies();
+            return Ok(movies);
+        }
+
         //LLAMADA A API EXTERNA
         [HttpGet("Find")]
         public async Task<IActionResult> FindMovie([FromQuery] string? title)

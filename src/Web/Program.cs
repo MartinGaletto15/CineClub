@@ -75,8 +75,10 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddDbContext<CineClubContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Base de datos
+builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlServer(
+    builder.Configuration["ConnectionStrings:DbConnectionString"]
+));
 
 ApiClientConfiguration apiClientConfiguration = new()
 {
@@ -113,8 +115,11 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

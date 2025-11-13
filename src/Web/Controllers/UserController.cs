@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Domain.Exceptions;
+using Application.Models.Requests;
 
 namespace Web.Controllers
 {
@@ -31,8 +32,8 @@ namespace Web.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var currentUserRole = User.FindFirstValue(ClaimTypes.Role);
+            var currentUserId = int.Parse(User.FindFirstValue("id")!);
+            var currentUserRole = User.FindFirstValue("role");
 
             //Si es User, solo puede ver su propio perfil
             if (currentUserRole == "User" && id != currentUserId)
@@ -42,6 +43,56 @@ namespace Web.Controllers
             if (user == null) return NotFound("User not found");
 
             return Ok(user);
+        }
+
+        [HttpGet("me")]
+        public IActionResult GetMyProfile()
+        {
+            var currentUserId = int.Parse(User.FindFirstValue("id")!);
+            var user = _service.GetById(currentUserId);
+
+            if (user == null)
+            {
+                return NotFound("Usuario no encontrado (token inválido o expirado)");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpPut("me")]
+        public IActionResult UpdateMyProfile([FromBody] UpdateUserRequest dto)
+        {
+            var currentUserId = int.Parse(User.FindFirstValue("id")!);
+
+            try
+            {
+                var updatedUser = _service.Update(currentUserId, dto);
+                return Ok(updatedUser);
+            }
+            catch (AppValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error al actualizar el perfil");
+            }
+        }
+
+        [HttpDelete("me")]
+        public IActionResult DeleteMyAccount()
+        {
+            var currentUserId = int.Parse(User.FindFirstValue("id")!);
+
+            try
+            {
+                _service.Delete(currentUserId);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocurrió un error al eliminar la cuenta");
+            }
         }
     }
 }

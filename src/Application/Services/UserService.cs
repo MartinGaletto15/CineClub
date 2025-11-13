@@ -95,12 +95,13 @@ namespace Application.Services
             var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
             var signature = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
 
-             var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            };
+            var claims = new List<Claim>();
+            claims.Add(new Claim("id", user.Id.ToString()));
+            claims.Add(new Claim("name", user.Name));
+            claims.Add(new Claim("lastName", user.LastName));
+            claims.Add(new Claim("email", user.Email));
+            claims.Add(new Claim("role", user.Role.ToString()));
+            claims.Add(new Claim("avatar", user.Avatar));
 
 
             var token = new JwtSecurityToken(
