@@ -24,9 +24,11 @@ export default function MovieFormModal({ movie, genres, directors, onSave, onClo
         synopsis: movie.synopsis ?? '',
         poster: movie.poster ?? '',
         genreIds:
-          (movie.genreIds ??
-           movie.genres ??
-           movie.genreDtos)?.map(g => (typeof g === 'object' ? g.id : g)) ?? [],
+        (
+          movie.genreIds ??
+          movie.genreDtos?.map(g => g.id) ??
+          movie.genres?.map(g => (typeof g === "object" ? g.id : null))
+        )?.filter(id => typeof id === "number") ?? [],
       });
     } else {
       setFormData({
