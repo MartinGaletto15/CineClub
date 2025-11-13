@@ -58,14 +58,15 @@ export default function MovieFormModal({ movie, genres, directors, onSave, onClo
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave({
-      Title: formData.title,
-      DirectorId: parseInt(formData.directorId),
-      ReleaseDate: formData.releaseDate,
-      Duration: parseInt(formData.duration),
-      Synopsis: formData.synopsis,
-      Poster: formData.poster,
-      GenreIds: formData.genreIds.map(id => parseInt(id)),
-    });
+    title: formData.title,
+    directorId: parseInt(formData.directorId),
+    releaseDate: formData.releaseDate,
+    duration: parseInt(formData.duration),
+    synopsis: formData.synopsis,
+    poster: formData.poster,
+    genreIds: formData.genreIds.map(id => parseInt(id)),
+});
+
   };
 
   return (
