@@ -76,9 +76,9 @@ builder.Services.AddCors(options =>
 });
 
 // Base de datos
-builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlServer(
-    builder.Configuration["ConnectionStrings:DbConnectionString"]
-));
+builder.Services.AddDbContext<CineClubContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 ApiClientConfiguration apiClientConfiguration = new()
 {
