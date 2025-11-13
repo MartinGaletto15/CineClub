@@ -4,97 +4,142 @@ import { AuthContext } from "../context/AuthContext";
 import { decodeTokenHelper, fetchLogin } from "./loginServices";
 import { errorToast, successToast } from "../notifications/Notifications";
 
-const Login = () => {
-    const navigate = useNavigate();
-    const { handleUserLogin } = useContext(AuthContext);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
+export default function Login() {
+  const navigate = useNavigate();
+  const { handleUserLogin } = useContext(AuthContext);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
+  const validateLogin = () => {
+    if (!formData.email.trim()) {
+      errorToast("Ingresá tu email.");
+      return false;
+    }
 
-            const responseData = await fetchLogin(formData.email, formData.password);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      errorToast("Email inválido.");
+      return false;
+    }
 
-            if (!responseData.token) {
-                throw new Error("Respuesta inválida, no se encontró el token.");
-            }
+    if (!formData.password.trim()) {
+      errorToast("Ingresá tu contraseña.");
+      return false;
+    }
 
-            const tokenString = responseData.token;
+    return true;
+  };
 
-            const data = decodeTokenHelper(tokenString);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateLogin()) return;
 
-            const { name, lastName, avatar, email, role, id } = data;
+    setLoading(true);
 
-            handleUserLogin(tokenString, name, lastName, avatar, email, role, id);
+    try {
+      const responseData = await fetchLogin(formData.email, formData.password);
 
-            successToast("Inicio de sesión exitoso");
-            navigate("/home");
+      if (!responseData.token) {
+        throw new Error("No se recibió un token válido.");
+      }
 
-        } catch (error) {
-            errorToast(error.message);
-        }
-    };
+      const decoded = decodeTokenHelper(responseData.token);
+      const { name, lastName, avatar, email, role, id } = decoded;
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900">
-            <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
-                <h2 className="text-3xl font-bold text-white mb-6 text-center">Iniciar Sesión</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label htmlFor="email" className="block text-gray-300 mb-2">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password" className="block text-gray-300 mb-2">
-                            Contraseña
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none"
-                            required
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
-                        Ingresar
-                    </button>
+      handleUserLogin(responseData.token, name, lastName, avatar, email, role, id);
 
-                    <p className="text-center text-gray-400 mt-2">
-                        ¿No tenés cuenta? {" "}
-                        <Link to="/register" className="text-blue-400 hover:underline">
-                            Registrate
-                        </Link>
-                    </p>
-                </form>
-            </div>
-        </div>
-    );
-};
+      successToast("Inicio de sesión exitoso");
+      navigate("/home");
 
-export default Login;
+    } catch (error) {
+      errorToast(error.message || "Credenciales incorrectas.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen w-full overflow-hidden bg-black flex items-center justify-center px-6">
+
+      {/* 🔥 Fondo cinematográfico */}
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c"
+          alt="cinema"
+          className="w-full h-full object-cover opacity-40"
+        />
+      </div>
+
+      {/* 🔥 Luces animadas */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute w-[600px] h-[600px] bg-red-600/20 rounded-full blur-[120px] animate-pulse-slow -top-40 -left-40"></div>
+        <div className="absolute w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] animate-pulse-slower bottom-0 right-0"></div>
+      </div>
+
+      {/* Card */}
+      <div className="relative z-10 w-full max-w-md bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl px-8 py-10 animate-fadeIn">
+
+        <h2 className="text-4xl font-bold text-white text-center mb-6">
+          Bienvenido a <span className="text-red-500">CineClub</span>
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="text-gray-300 text-sm mb-1 block">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="
+                w-full px-4 py-3 rounded-lg 
+                bg-black/40 border border-white/10 
+                text-white placeholder-gray-400
+                focus:border-red-500 focus:ring-2 focus:ring-red-600/40
+              "
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-300 text-sm mb-1 block">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="
+                w-full px-4 py-3 rounded-lg 
+                bg-black/40 border border-white/10 
+                text-white placeholder-gray-400
+                focus:border-red-500 focus:ring-2 focus:ring-red-600/40
+              "
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="
+              w-full py-3 rounded-lg font-semibold 
+              bg-red-600 hover:bg-red-700 
+              text-white shadow-lg shadow-red-900/40
+              transition-all disabled:bg-red-600/40
+            "
+          >
+            {loading ? "Ingresando..." : "Ingresar"}
+          </button>
+        </form>
+
+        <p className="text-gray-400 text-center mt-6">
+          ¿No tenés cuenta?{" "}
+          <Link to="/register" className="text-red-500 font-semibold hover:underline">
+            Registrate
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -1,97 +1,144 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import MovieSection from "../movieSection/MovieSection";
 import { getMovies } from "./landingServices";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext"; // ⭐ IMPORTANTE
 
 const Landing = () => {
-    
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);    // ⭐ Saber si hay sesión
+  const [movies, setMovies] = useState([]);
 
-    const [movies, setMovies] = useState([]);
-
-    const handleLogin = () => {
-        navigate("/login");
+  // 🚫 Si el usuario está logueado → no puede ver el landing
+  useEffect(() => {
+    if (token) {
+      navigate("/home");  // redirige automáticamente
     }
+  }, [token, navigate]);
 
-    const handleRegister = () => {
-        navigate("/register");
-    }
+  const handleLogin = () => navigate("/login");
+  const handleRegister = () => navigate("/register");
 
-    useEffect(() => {
-        const loadData = async () => {
-            const loadMovies = await getMovies();
-            setMovies(loadMovies);
-        }
+  // Cargar pelis destacadas
+  useEffect(() => {
+    const loadData = async () => {
+      const loadMovies = await getMovies();
+      setMovies(loadMovies);
+    };
+    loadData();
+  }, []);
 
-        loadData();
-    }, [])
+  return (
+    <div className="bg-slate-950 min-h-screen text-white">
 
-    return (
-        <div className="bg-gray-900 min-h-screen">
-            {/* Hero Section */}
-            <div className="relative h-[70vh] bg-black">
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent z-10" />
-                <img
-                    src="https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg"
-                    className="w-full h-full object-cover opacity-50"
-                    alt="Hero background"
-                />
-                <div className="absolute inset-0 flex items-center z-20 px-8 md:px-16">
-                    <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                            Descubre y Organiza tus Películas Favoritas
-                        </h1>
-                        <p className="text-xl text-gray-300 mb-8">
-                            Mantén un registro de las películas que quieres ver, las que estás viendo y las que ya has visto.
-                        </p>
-                        <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={handleLogin}>
-                            Comenzar Ahora
-                        </button>
-                    </div>
-                </div>
-            </div>
+      {/* HERO SECTION (Ultra Pro) */}
+      <div className="relative h-[80vh] w-full overflow-hidden">
+        {/* Backdrop */}
+        <img
+          src="https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+          alt="Cine backdrop"
+        />
 
-            {/* Featured Movies Section */}
-            <MovieSection title={"Peliculas destacadas"} movies={movies} />
+        {/* Dark Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90"></div>
 
-            {/* Features Section */}
-            <div className="bg-gray-800 py-16">
-                <div className="max-w-7xl mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-white text-center mb-12">¿Por qué usar CineClub?</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="text-center p-6">
-                            <div className="text-4xl mb-4 text-red-500">📝</div>
-                            <h3 className="text-xl font-semibold text-white mb-2">Organiza tu Lista</h3>
-                            <p className="text-gray-400">Mantén un registro ordenado de todas las películas que quieres ver</p>
-                        </div>
-                        <div className="text-center p-6">
-                            <div className="text-4xl mb-4 text-red-500">⭐</div>
-                            <h3 className="text-xl font-semibold text-white mb-2">Califica y Reseña</h3>
-                            <p className="text-gray-400">Comparte tus opiniones y calificaciones con otros usuarios</p>
-                        </div>
-                        <div className="text-center p-6">
-                            <div className="text-4xl mb-4 text-red-500">🎯</div>
-                            <h3 className="text-xl font-semibold text-white mb-2">Descubre Más</h3>
-                            <p className="text-gray-400">Encuentra nuevas películas basadas en tus gustos</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {/* CONTENT */}
+        <div className="relative h-full flex items-center px-8 md:px-20">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-7xl font-extrabold leading-tight drop-shadow-lg">
+              Descubrí • Guardá • Rankeá
+            </h1>
 
-            {/* CTA Section */}
-            <div className="text-center py-16">
-                <h2 className="text-3xl font-bold text-white mb-4">
-                    ¿Listo para empezar tu viaje cinematográfico?
-                </h2>
-                <p className="text-gray-400 mb-8">
-                    Únete a nuestra comunidad de amantes del cine
-                </p>
-                <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors" onClick={handleRegister}>
-                    Crear Cuenta Gratis
-                </button>
-            </div>
+            <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-xl leading-relaxed">
+              Tu espacio para organizar tus películas favoritas, seguir lo que viste
+              y descubrir nuevos clásicos.
+            </p>
+
+            <button
+              onClick={handleLogin}
+              className="
+                mt-8 px-10 py-4
+                rounded-xl text-lg font-semibold
+                bg-red-600 hover:bg-red-700
+                shadow-lg hover:shadow-xl
+                transition-all
+              "
+            >
+              Comenzar Ahora
+            </button>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* FEATURED MOVIES */}
+      <div className="mt-12">
+        <MovieSection title={"Películas destacadas"} movies={movies} />
+      </div>
+
+      {/* FEATURES SECTION */}
+      <div className="bg-slate-900/60 backdrop-blur-lg py-20 mt-20 border-t border-white/10">
+        <div className="max-w-6xl mx-auto px-6">
+
+          <h2 className="text-4xl font-extrabold text-center mb-16">
+            ¿Por qué usar CineClub?
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-14">
+
+            <div className="text-center">
+              <div className="text-5xl mb-4 text-red-500">📝</div>
+              <h3 className="text-xl font-semibold">Organiza tu Lista</h3>
+              <p className="text-gray-400 mt-2">
+                Guardá todas las películas que querés ver, viste o abandonaste.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl mb-4 text-yellow-400">⭐</div>
+              <h3 className="text-xl font-semibold">Califica y Reseña</h3>
+              <p className="text-gray-400 mt-2">
+                Compartí tu opinión con reviews y puntuaciones.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl mb-4 text-blue-400">🎯</div>
+              <h3 className="text-xl font-semibold">Descubre Más</h3>
+              <p className="text-gray-400 mt-2">
+                Recomendaciones basadas en tus gustos cinéfilos.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* CTA FINAL */}
+      <div className="text-center py-20">
+        <h2 className="text-4xl font-bold">
+          ¿Listo para comenzar tu viaje cinematográfico?
+        </h2>
+
+        <p className="text-gray-400 mt-2 mb-10 text-lg">
+          Unite a CineClub y empezá a construir tu colección.
+        </p>
+
+        <button
+          onClick={handleRegister}
+          className="
+            bg-red-600 hover:bg-red-700
+            px-10 py-4 rounded-xl text-lg font-semibold
+            shadow-lg hover:shadow-2xl
+            transition-all
+          "
+        >
+          Crear Cuenta Gratis
+        </button>
+      </div>
+
+    </div>
+  );
 };
 
 export default Landing;
