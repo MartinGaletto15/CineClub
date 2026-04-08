@@ -72,14 +72,18 @@ node_modules/
 # Archivos de build y artefactos
 # La carpeta de salida de la compilación de Vite
 dist/
+dist-ssr/
 # Carpeta de caché de Vite
 .vite/
 
 # Archivos de Log y caché
+logs
+*.log
 npm-debug.log*
 yarn-error.log*
 yarn-debug.log*
 pnpm-debug.log*
+lerna-debug.log*
 
 # Variables de entorno
 # NUNCA subas tus claves secretas o contraseñas
@@ -91,3 +95,8 @@ pnpm-debug.log*
 .vscode/
 .idea/
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
