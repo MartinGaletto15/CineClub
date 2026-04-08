@@ -76,9 +76,9 @@ builder.Services.AddCors(options =>
 });
 
 // Base de datos
-builder.Services.AddDbContext<CineClubContext>(options => options.UseSqlServer(
-    builder.Configuration["ConnectionStrings:DbConnectionString"]
-));
+builder.Services.AddDbContext<CineClubContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 ApiClientConfiguration apiClientConfiguration = new()
 {
@@ -115,11 +115,10 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

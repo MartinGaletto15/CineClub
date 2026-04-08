@@ -78,8 +78,8 @@ namespace Web.Controllers
             return Ok(result);
         }
 
-        //EDITAR VISUALIZACIÓN - SOLO ADMIN / SUPERADMIN
-        [Authorize(Roles = "Admin,SuperAdmin")]
+        //EDITAR VISUALIZACIÓN - TODOS
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, UpdateViewRequest dto)
         {
@@ -87,8 +87,8 @@ namespace Web.Controllers
             return Ok(result);
         }
 
-        //ELIMINAR VISUALIZACIÓN - SOLO SUPERADMIN
-        [Authorize(Roles = "SuperAdmin")]
+        //ELIMINAR VISUALIZACIÓN - TODOS
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
