@@ -59,7 +59,7 @@ frontend/
 npm install
 
 # 2. Crear archivo .env.local (si no existe)
-# VITE_BASE_SERVER_URL=http://localhost:5000
+# VITE_BASE_SERVER_URL=http://localhost:5027
 
 # 3. Ejecutar en desarrollo
 npm run dev
@@ -89,7 +89,7 @@ npm run preview
 Crear `.env.local` en la raíz del frontend:
 
 ```env
-VITE_BASE_SERVER_URL=http://localhost:5000
+VITE_BASE_SERVER_URL=http://localhost:5027
 ```
 
 - `VITE_BASE_SERVER_URL`: URL base de la API del backend
