@@ -1,136 +1,335 @@
-<p align="center">
-  <img src="sandbox:/mnt/data/cineclub_logo_transparent.png" width="350"/>
-</p>
+# 🔌 CineClub Backend API
 
-<h1 align="center">🎬 CineClub API</h1>
-
-<p align="center">
-  Proyecto Final Integrador – Programación IV – UTN FRRO  
-  <br>
-  Sistema backend para la gestión de películas, usuarios, géneros y visualizaciones.
-</p>
+> API REST desarrollada con **.NET 8**, **Entity Framework Core** y **autenticación JWT**.
 
 ---
 
-## 👥 Integrantes
+## 📝 Descripción
 
-| Nombre | Rol |
-|-------|-----|
-| **Kevin Kener** | Desarrollo Backend / Arquitectura |
-| **Martín Galetto** | Desarrollo Backend / Documentación / Testing |
+Backend que gestiona:
 
----
-
-## 📝 Descripción General
-
-**CineClub** es una API REST que permite administrar un catálogo de películas, sus directores, géneros asociados, usuarios y registros de visualización.
-
-El sistema incorpora:
-
-- ✅ CRUD completo en todas las entidades principales
-- ✅ Autenticación con **JWT**
-- ✅ Manejo de roles (SuperAdmin / Admin / User)
-- ✅ Protección de rutas con `[Authorize]`
-- ✅ Documentación y testeo mediante **Swagger**
+- ✅ CRUD de películas, géneros, directores
+- ✅ Autenticación JWT y roles de usuario
+- ✅ Seguimiento de visualizaciones
+- ✅ Integración con API externa (OMDb)
+- ✅ Documentación Swagger/OpenAPI
 
 ---
 
-## 🧱 Arquitectura del Proyecto
+## 🏗️ Arquitectura
 
-El proyecto sigue el patrón **Clean Architecture**, desacoplando las responsabilidades en capas:
+Arquitectura limpia en **4 capas**:
 
-📦 CineClub
-┣ 📂 Domain → Entidades, Interfaces, Enums
-┣ 📂 Application → DTOs, Servicios, Reglas de Negocio
-┣ 📂 Infrastructure → Repositorios, EF Core, DbContext
-┗ 📂 Web → Controladores, Middlewares, Swagger, JWT
+```
+Web (Controladores, Swagger, JWT)
+    ↓
+Application (DTOs, Servicios, Reglas de negocio)
+    ↓
+Domain (Entidades, Interfaces, Excepciones)
+    ↓
+Infrastructure (Repositorios, EF Core, DbContext)
+```
 
+### Estructura del Proyecto
+
+```
+backend/
+├── CineClub.sln
+├── src/
+│   ├── Domain/
+│   │   ├── Entities/          # User, Movie, Genre, Director, View
+│   │   ├── Interfaces/        # Contratos de repositorios
+│   │   └── Exceptions/        # AppValidationException
+│   │
+│   ├── Application/
+│   │   ├── Interfaces/        # IMovieService, IUserService, etc.
+│   │   ├── Models/
+│   │   │   ├── DTOs/          # MovieDto, UserDto, etc.
+│   │   │   └── Requests/      # CreateMovieRequest, LoginRequest, etc.
+│   │   └── Services/          # MovieService, UserService, etc.
+│   │
+│   ├── Infrastructure/
+│   │   ├── Persistence/
+│   │   │   ├── CineClubContext.cs
+│   │   │   └── Repositories/  # MovieRepository, UserRepository, etc.
+│   │   ├── Migrations/        # EF Core migrations
+│   │   ├── ApiClientConfiguration.cs
+│   │   └── PollyResiliencePolicies.cs
+│   │
+│   └── Web/
+│       ├── Controllers/       # ApiController, AuthController, etc.
+│       ├── Middlewares/       # GlobalExceptionHandlingMiddleware
+│       ├── Program.cs         # DI, Auth, CORS, Swagger
+│       ├── appsettings.json
+│       └── appsettings.Development.json
+│
+├── Archive/                   # Migraciones antiguas
+└── README.md
+```
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías
 
-| Tecnología | Uso |
-|-----------|-----|
-| **.NET 8 Web API** | Backend principal |
-| **Entity Framework Core** | ORM y acceso a datos |
-| **SQLite**| Base de datos de desarrollo |
-| **SQL Server** | Base de datos final en Azure |
-| **JWT Authentication** | Inicio de sesión y autorización por roles |
-| **Swagger / OpenAPI** | Testing y documentación |
-| **Azure App Service** | Host final de la API |
-| **HttpClientFactory** | Consumo de API externa (TMDB) |
+| Tecnología | Versión | Propósito |
+|-----------|---------|----------|
+| .NET | 8.0 | Runtime |
+| Entity Framework Core | 8.x | ORM |
+| SQL Server | - | Base de datos |
+| JWT Bearer | 8.0.4 | Autenticación |
+| Swagger (Swashbuckle) | 6.x | Documentación |
+| Polly | - | Resiliencia |
 
 ---
 
-## ✅ Requisitos del TP Cumplidos
+## 🚀 Instalación y Ejecución
 
-| Requisito | Estado |
-|-----------|:------:|
-| Arquitectura por capas | ✅ |
-| CRUD completo de entidades | ✅ |
-| Patrón Repositorio + Servicio | ✅ |
-| Swagger documentando endpoints | ✅ |
-| Autenticación JWT funcional | ✅ |
-| Inclusión de roles en el token | ✅ |
-| Protección de endpoints `[Authorize]` | ✅ |
-| Migración a SQL Server en Azure | ✅ |
-| CI/CD con GitHub Actions | ✅ |
-| Consumo de API externa (OMDB) con HttpClientFactory | ✅ |
+### Requisitos
+- .NET 8 SDK
+- SQL Server (local o remoto)
+
+### Pasos
+
+```powershell
+# 1. Navegar a Web
+cd src/Web
+
+# 2. Restaurar dependencias
+dotnet restore
+
+# 3. Configurar el servidor de desarrollo
+$Env:ASPNETCORE_ENVIRONMENT = "Development"
+
+# 4. Ejecutar
+dotnet run
+```
+
+**Swagger:** `http://localhost:5000/swagger`
+
+---
+
+## ⚙️ Configuración
+
+### appsettings.Development.json
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=DESKTOP-S9L3H6E;Database=CineClubApi;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;"
+  },
+  "JwtSettings": {
+    "Secret": "EstaClaveEsSoloParaDesarrolloLocal123!"
+  },
+  "OMDb": {
+    "ApiKey": "17f27fe4"
+  }
+}
+```
+
+---
+
+## 🔑 Entidades Principales
+
+### User
+- id, name, lastName, email, password, avatar, role
+- Roles: SuperAdmin, Admin, User
+
+### Movie
+- id, title, year, poster, plot, rating, directorId
+
+### Genre
+- id, name
+
+### Director
+- id, name, birthDate
+
+### View (Visualización)
+- id, userId, movieId, watchDate, rating
+
+---
 
 ## 🔐 Autenticación JWT
 
+### Endpoints
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/auth/login` | Generar JWT |
+| POST | `/api/auth/register` | Registrar usuario |
+
 ### Login
 
-POST /api/User/Login
+```bash
+POST /api/auth/login
+Content-Type: application/json
 
-
-### Ejemplo Body:
-json
 {
-  "email": "kevin@test.com",
-  "password": "123456"
+  "email": "usuario@example.com",
+  "password": "contraseña"
 }
+```
 
-Respuesta:
+**Respuesta:**
+```json
 {
-  "token": "eyJhbGciOiJIUz..."
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
+```
 
-Activarlo en Swagger:
+### Usar Token en Swagger
 
-Authorize → Bearer eyJhbGciOi...
+1. Click en **Authorize**
+2. Ingresar: `Bearer {token}`
+3. Las peticiones incluirán el header automáticamente
 
-🎯 Endpoints Principales
+---
 
-| Método | Ruta              | Descripción                 |
-| ------ | ----------------- | --------------------------- |
-| GET    | `/api/Movie`      | Lista todas las películas   |
-| POST   | `/api/Movie`      | Crea una nueva película     |
-| GET    | `/api/Genre`      | Lista géneros               |
-| GET    | `/api/Director`   | Lista directores            |
-| POST   | `/api/User/Login` | Obtiene JWT                 |
-| GET    | `/api/User`       | (Protegido): Lista usuarios |
+## 🎯 Endpoints Principales
 
-🚀 Ejecución En La Nube SQL Azure
+### Movies
+| Método | Ruta | Protegido |
+|--------|------|----------|
+| GET | `/api/movies` | ❌ |
+| GET | `/api/movies/{id}` | ❌ |
+| POST | `/api/movies` | ✅ Admin |
+| PUT | `/api/movies/{id}` | ✅ Admin |
+| DELETE | `/api/movies/{id}` | ✅ Admin |
 
-https://cineclub-dev.azurewebsites.net/swagger/
+### Genres
+| Método | Ruta |
+|--------|------|
+| GET | `/api/genres` |
+| POST | `/api/genres` |
 
-🚀 Conexion a Base de Datos (SQL SERVER MANGMENT STUDIO 21)
+### Directors
+| Método | Ruta |
+|--------|------|
+| GET | `/api/directors` |
+| POST | `/api/directors` |
 
-A traves de String Connection brindado por Cadenas de conexión desde Panel De BDD Azure: ADO.NET (autenticación de SQL)
-Se puede encontrar desde el codigo en appsettings.json en linea 9  "DefaultConnection" 
+### Views (Visualizaciones)
+| Método | Ruta |
+|--------|------|
+| GET | `/api/view/user/{userId}` |
+| POST | `/api/view` |
 
-🚀 Ejecución Local
+---
 
-cd src/Web
-dotnet run
+## 🔄 Patrón Repositorio
 
-Abrir Swagger:
+Cada entidad tiene:
 
-http://localhost:5027/swagger
+1. **Interface en Domain:**
+   ```csharp
+   public interface IMovieRepository : IGenericRepository<Movie>
+   {
+       // Métodos específicos
+   }
+   ```
 
-<p align="center"> <b>🎬 CineClub – Donde las películas viven.</b> </p> ```
+2. **Implementación en Infrastructure:**
+   ```csharp
+   public class MovieRepository : GenericRepository<Movie>, IMovieRepository
+   {
+       // Implementación
+   }
+   ```
+
+3. **Inyección en Program.cs:**
+   ```csharp
+   builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+   ```
+
+---
+
+## 🛡️ Middleware
+
+### GlobalExceptionHandlingMiddleware
+
+Captura excepciones y retorna respuestas estandarizadas:
+
+- `AppValidationException` → 400 Bad Request
+- Excepciones genéricas → 500 Internal Server Error
+
+---
+
+## 🔄 Migraciones
+
+```powershell
+# Ver migraciones
+dotnet ef migrations list --project src/Infrastructure --startup-project src/Web
+
+# Crear nueva migración
+dotnet ef migrations add NombreMigracion --project src/Infrastructure --startup-project src/Web
+
+# Aplicar migraciones
+dotnet ef database update --project src/Infrastructure --startup-project src/Web
+```
+
+---
+
+## 🌐 Consumo API Externa (OMDb)
+
+Via `HttpClientFactory` con políticas Polly:
+
+```csharp
+builder.Services.AddHttpClient("OMDb", client =>
+{
+    client.BaseAddress = new Uri("https://www.omdbapi.com/");
+})
+.AddPolicyHandler(PollyResiliencePolicies.GetRetryPolicy(...))
+.AddPolicyHandler(PollyResiliencePolicies.GetCircuitBreakerPolicy(...));
+```
+
+- Reintenta en caso de fallo
+- Circuit breaker tras fallos consecutivos
+
+---
+
+## 🚀 Producción (Azure)
+
+**URL Actual:** `https://cineclub-dev.azurewebsites.net/swagger`
+
+Conexión remota a SQL Server en Azure con cadena de conexión segura.
+
+---
+
+## ✅ Requisitos del Proyecto Cumplidos
+
+| Requisito | Status |
+|-----------|:------:|
+| Arquitectura por capas | ✅ |
+| CRUD completo | ✅ |
+| Patrón Repositorio | ✅ |
+| Swagger documentado | ✅ |
+| JWT + Roles | ✅ |
+| Endpoints protegidos | ✅ |
+| Excepciones manejadas | ✅ |
+| API externa (OMDb) | ✅ |
+| SQL Server | ✅ |
+| CI/CD | ✅ |
+
+---
+
+## 👥 Autores
+
+| Nombre | Rol |
+|--------|-----|
+| **Kevin Kener** | Backend / Arquitectura |
+| **Martín Galetto** | Backend / Documentación |
+
+---
+
+## 📄 Licencia
+
+Proyecto académico - UTN FRRO - Programación IV
+
+---
+
+<p align="center">
+<b>🔌 Backend CineClub</b>
+</p>
+
 
 
 
