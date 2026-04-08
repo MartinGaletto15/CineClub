@@ -56,7 +56,7 @@ $Env:ASPNETCORE_ENVIRONMENT = "Development"
 dotnet run
 ```
 
-**Swagger API:** `http://localhost:5000/swagger`
+**Swagger API:** `http://localhost:5027/swagger`
 
 > Requiere SQL Server local. Configurar en `backend/src/Web/appsettings.Development.json`
 
@@ -75,7 +75,7 @@ npm run dev
 ## 📚 Documentación
 
 - **Backend:** Ver [backend/README.md](backend/README.md)
-- **Frontend:** Ver [frontend/README.md](frontend/README.md)
+- **Frontend:** Ver [frontend/README.md](frontend/readme.md)
 
 ---
 
@@ -83,8 +83,8 @@ npm run dev
 
 | Nombre | Rol |
 |--------|-----|
-| **Kevin Kener** | Desarrollo Backend / Arquitectura |
-| **Martín Galetto** | Desarrollo Backend / Frontend / Documentación |
+| **Kevin Kener** | Desarrollo Backend / Frontend / Documentación |
+| **Martín Galetto** | Desarrollo Backend / Frontend / Arquitectura |
 
 ---
 
@@ -127,5 +127,5 @@ Proyecto académico - UTN FRRO - Programación IV
 ---
 
 <p align="center">
-<b>🎬 CineClub – Donde las películas viven.</b>
+<b>🎬 CineClub – El cine como experiencia.</b>
 </p>

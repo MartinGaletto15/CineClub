@@ -104,7 +104,7 @@ $Env:ASPNETCORE_ENVIRONMENT = "Development"
 dotnet run
 ```
 
-**Swagger:** `http://localhost:5000/swagger`
+**Swagger:** `http://localhost:5027/swagger`
 
 ---
 
@@ -286,14 +286,6 @@ builder.Services.AddHttpClient("OMDb", client =>
 
 ---
 
-## 🚀 Producción (Azure)
-
-**URL Actual:** `https://cineclub-dev.azurewebsites.net/swagger`
-
-Conexión remota a SQL Server en Azure con cadena de conexión segura.
-
----
-
 ## ✅ Requisitos del Proyecto Cumplidos
 
 | Requisito | Status |
@@ -315,8 +307,8 @@ Conexión remota a SQL Server en Azure con cadena de conexión segura.
 
 | Nombre | Rol |
 |--------|-----|
-| **Kevin Kener** | Backend / Arquitectura |
-| **Martín Galetto** | Backend / Documentación |
+| **Kevin Kener** | Backend / Documentación |
+| **Martín Galetto** | Backend / Arquitectura |
 
 ---
 
@@ -327,7 +319,7 @@ Proyecto académico - UTN FRRO - Programación IV
 ---
 
 <p align="center">
-<b>🔌 Backend CineClub</b>
+<b>🎬 CineClub – El cine como experiencia.</b>
 </p>
 
 
